@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_centerInParent="true"
+    android:textAlignment="center"
+    android:orientation="vertical"
+    app:layout_collapseMode="none"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#14558F"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="1dp"
+        android:padding="30sp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="10dp"
+            android:layout_margin="15sp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/profit"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:id="@+id/profit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="65dp"
+                    android:gravity="center"
+                    android:text="1231231111111123123"
+                    android:paddingHorizontal="20sp"
+                    android:maxLines="1"
+                    android:background="#0DD715"
+                    android:textAlignment="center"
+                    />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="10dp"
+            android:layout_margin="15sp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                >
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/income"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:id="@+id/income"
+                    android:layout_width="wrap_content"
+                    android:maxLines="1"
+                    android:paddingHorizontal="20sp"
+                    android:gravity="center"
+                    android:text="123123123123"
+                    android:layout_height="65dp"
+                    android:background="#D7CF0D"
+                    android:textAlignment="center"
+                    />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="10dp"
+            android:layout_margin="15sp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/textView6"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/income"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:id="@+id/consumption"
+                    android:layout_width="wrap_content"
+                    android:gravity="center"
+                    android:text="123123123123"
+                    android:maxLines="1"
+                    android:paddingHorizontal="20sp"
+                    android:layout_height="65dp"
+                    android:background="#ff0000"
+                    android:textAlignment="center"
+                    />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        >
+
+        <Button
+            android:id="@+id/firms"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/firms"
+            android:background="@drawable/ic_rectangle"
+            android:layout_marginHorizontal="15sp"/>
+
+        <Button
+            android:id="@+id/debtors"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/debtors"
+            android:background="@drawable/ic_rectangle"
+            android:layout_marginHorizontal="15sp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingHorizontal="85sp"
+        android:layout_marginTop="10sp"
+        >
+        <Button
+            android:id="@+id/shopping_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/shopping_list"
+            android:background="@drawable/ic_rectangle"
+            android:layout_marginHorizontal="15sp"/>
+    </LinearLayout>
+
+</LinearLayout>

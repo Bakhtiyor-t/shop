@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Shop</string>
+    <string name="profit">Прибыль</string>
+    <string name="income">Доход</string>
+    <string name="consumption">Расход</string>
+    <string name="shopping_list">Список покупок</string>
+    <string name="debtors">Задолжники</string>
+    <string name="firms">Фирмы</string>
+    <string name="add">Добавить</string>
+    <string name="title">Название фирмы</string>
+    <string name="pay">Оплачено</string>
+    <string name="duty">Долг</string>
+</resources>
