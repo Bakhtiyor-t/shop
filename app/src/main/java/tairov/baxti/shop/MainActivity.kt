@@ -13,6 +13,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val f = 0
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.profit.text = (data[0] - data[1]).toString()
