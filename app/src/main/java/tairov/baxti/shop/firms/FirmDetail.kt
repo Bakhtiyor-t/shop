@@ -10,7 +10,6 @@ class FirmDetail : AppCompatActivity() {
         binding = ActivityFirmDetailBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        binding.textView.text = intent.getStringExtra("title")
     }
 
 }

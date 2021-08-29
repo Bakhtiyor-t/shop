@@ -10,14 +10,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Shop">
         <activity
-            android:name=".firms.AddFirm"
-            android:exported="true" />
-        <activity
-            android:name=".firms.FirmDetail"
-            android:exported="true" />
-        <activity
-            android:name=".firms.Firms"
-            android:exported="true">
+            android:name=".auth.SignInOrSignUp"
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,8 +19,25 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".ShoppingList.ShoppingList"
             android:exported="true" />
+        <activity
+            android:name=".debetors.Debtors"
+            android:exported="true" />
+        <activity
+            android:name=".firms.AddFirm"
+            android:exported="true" />
+        <activity
+            android:name=".firms.FirmDetail"
+            android:exported="true" />
+        <activity
+            android:name=".firms.Firms"
+            android:exported="true" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+
+        </activity>
     </application>
 
 </manifest>

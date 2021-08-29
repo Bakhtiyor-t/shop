@@ -10,4 +10,29 @@
     <string name="title">Название фирмы</string>
     <string name="pay">Оплачено</string>
     <string name="duty">Долг</string>
+
+    <!--    Firm detail -->
+    <string name="number">№</string>
+    <string name="name">Название товара</string>
+    <string name="count">Кол-во</string>
+    <string name="price">Цена</string>
+    <string name="discount">Скидка %</string>
+    <string name="total_price">Общ. сумма</string>
+    <string name="total">Итого:</string>
+    <string name="payment">К оплате</string>
+    <string name="paid_for">Оплачено</string>
+    <string name="previous_debt">Пред. задолженность</string>
+    <string name="total_debt">Общая задолженность</string>
+
+<!--    Sign in or Sign up-->
+
+    <string name="sing_in">Вход</string>
+    <string name="sing_up">Регистрация</string>
+    <string name="singIn"><u>Войти?</u></string>
+    <string name="singUp"><u>Зарегистрираваться?</u></string>
+    <string name="email">Электронная почта</string>
+    <string name="password">Пароль</string>
+    <string name="confirm_password">Подтвердите пароль</string>
+    <string name="logout">Выйти</string>
+
 </resources>

@@ -9,11 +9,12 @@ import tairov.baxti.shop.R
 import tairov.baxti.shop.databinding.FirmItemBinding
 
 class FirmAdapter(private val onClickListener: ClickFirm) : RecyclerView.Adapter<FirmAdapter.FirmHolder>() {
-    val firmList = ArrayList<Firm>()
+    var firms = ArrayList<Firm>()
 
     class FirmHolder(item: View) : RecyclerView.ViewHolder(item) {
         val binding = FirmItemBinding.bind(item)
         fun bind(firm: Firm) = with(binding) {
+            firmItemId.text = firm.id.toString()
             tvTitle.text = firm.title
             tvPay.text = firm.pay.toString()
             tvConsumption.text = firm.consumption.toString()
@@ -26,19 +27,25 @@ class FirmAdapter(private val onClickListener: ClickFirm) : RecyclerView.Adapter
     }
 
     override fun onBindViewHolder(holder: FirmHolder, position: Int) {
-        holder.bind(firmList[position])
+        holder.bind(firms[position])
         holder.binding.firmItem.setOnClickListener {
             onClickListener.onClick(it)
         }
     }
 
     override fun getItemCount(): Int {
-        return firmList.size
+        return firms.size
     }
 
     @SuppressLint("NotifyDataSetChanged")
     fun addFirm(firm: Firm){
-        firmList.add(firm)
+        firms.add(firm)
+        notifyDataSetChanged()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun addAllFirm(firmsList: ArrayList<Firm>){
+        firms = firmsList
         notifyDataSetChanged()
     }
 }

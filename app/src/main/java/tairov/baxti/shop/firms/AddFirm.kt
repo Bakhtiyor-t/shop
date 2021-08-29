@@ -19,6 +19,7 @@ class AddFirm : AppCompatActivity() {
     fun addNewFirm() = with(binding){
         if(!isFieldEmpty()){
             val firm = Firm(
+                1234,
                 editTitle.text.toString(),
                 editPay.text.toString().toDouble(),
                 editDuty.text.toString().toDouble(),
