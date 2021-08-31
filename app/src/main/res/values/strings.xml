@@ -35,4 +35,12 @@
     <string name="confirm_password">Подтвердите пароль</string>
     <string name="logout">Выйти</string>
 
+<!--    Debtors-->
+    <string name="debtorsTitle">Задолжники</string>
+    <string name="done">Готово</string>
+    <string name="cancel">Отмена</string>
+    <string name="nameDebtor">Имя задолжника</string>
+    <string name="paid">Оплатил</string>
+    <string name="debt">Осталось</string>
+
 </resources>

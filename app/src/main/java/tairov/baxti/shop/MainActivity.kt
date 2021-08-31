@@ -3,10 +3,8 @@ package tairov.baxti.shop
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import tairov.baxti.shop.ShoppingList.ShoppingList
-import tairov.baxti.shop.auth.SignInOrSignUp
 import tairov.baxti.shop.firms.Firms
 import tairov.baxti.shop.databinding.ActivityMainBinding
 import tairov.baxti.shop.debetors.Debtors
@@ -54,4 +52,11 @@ class MainActivity : AppCompatActivity() {
         finish()
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val currentUser = auth.currentUser
+        if(currentUser != null){
+            moveTaskToBack(true);
+        }
+    }
 }

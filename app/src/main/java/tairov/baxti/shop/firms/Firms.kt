@@ -34,7 +34,7 @@ class Firms : AppCompatActivity() {
     private fun goToFirmDetail(item: View) {
         val intent = Intent(this, FirmDetail::class.java)
         val firmDetail = ArrayList<String>()
-        val d = item.findViewById<TextView>(R.id.firmItemId)
+        val d = item.findViewById<TextView>(R.id.debtorItemId)
         Log.d("Mylog", "${d.text}")
         firmDetail.add(item.findViewById<TextView>(R.id.tv_title).text.toString())
         firmDetail.add(item.findViewById<TextView>(R.id.tv_title).text.toString())
