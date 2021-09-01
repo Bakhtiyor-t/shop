@@ -10,7 +10,9 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.database.*
+import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
+import com.google.firebase.ktx.Firebase
 import tairov.baxti.shop.databinding.ActivityDebtorsBinding
 import tairov.baxti.shop.dialogs.EditDebtorDialog
 import kotlin.collections.ArrayList
@@ -28,6 +30,9 @@ class Debtors : AppCompatActivity(), EditDebtorDialog.EditDebtorDialogListener {
         binding = ActivityDebtorsBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+//        Firebase.database.setPersistenceEnabled(true)
+
 
         db = FirebaseDatabase.getInstance("https://shop-15b50-default-rtdb.europe-west1.firebasedatabase.app")
         debtorsRef = db.getReference("Debtors")
@@ -72,15 +77,16 @@ class Debtors : AppCompatActivity(), EditDebtorDialog.EditDebtorDialogListener {
 
     private fun initClickListeners(): ClickDebtorItem {
         return object : ClickDebtorItem {
-            override fun onDelete(itemId: String) {
-                debtorsRef.child(itemId).removeValue()
+            override fun onDelete(debtorId: String) {
+                debtorsRef.child(debtorId).removeValue()
                 Toast.makeText(baseContext, "Запись удалена", Toast.LENGTH_SHORT).show()
             }
 
-            override fun onEdit(itemId: String) {
+            override fun onEdit(debtorId: String, debtorName: String) {
                 val fm = supportFragmentManager
                 editDebtorDialog.show(fm, "editDebtorDialog_tag")
-                Toast.makeText(baseContext, "Edit", Toast.LENGTH_SHORT).show()
+                editDebtorDialog.debtorName = debtorName
+                editDebtorDialog.debtorId = debtorId
             }
         }
     }
@@ -90,8 +96,26 @@ class Debtors : AppCompatActivity(), EditDebtorDialog.EditDebtorDialogListener {
         editDebtorDialog.dismiss()
     }
 
-    override fun done(dialog: DialogFragment) {
-        Toast.makeText(baseContext, "Done!", Toast.LENGTH_SHORT).show()
+    override fun done(dialog: DialogFragment, debtorId: String, paid: String, debt: String) {
+        if(paid.isNotEmpty()){
+            debtorsRef.child(debtorId).child("pay").setValue(paid.toDouble())
+            val dbDebt = debtorsRef.child(debtorId).child("debt")
+            dbDebt.addListenerForSingleValueEvent(object: ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                   val totalDebt = snapshot.value.toString().toDouble() - paid.toDouble()
+                   debtorsRef.child(debtorId).child("debt").setValue(totalDebt)
+                }
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+            })
+            Toast.makeText(baseContext, "Данные обновлены", Toast.LENGTH_SHORT).show()
+        }
+        if(debt.isNotEmpty()){
+            debtorsRef.child(debtorId).child("debt").setValue(debt.toDouble())
+            Toast.makeText(baseContext, "debt: Updated!!!", Toast.LENGTH_SHORT).show()
+        }
+        Toast.makeText(baseContext, "paid: $paid, debt: $debt", Toast.LENGTH_SHORT).show()
         editDebtorDialog.dismiss()
     }
 }

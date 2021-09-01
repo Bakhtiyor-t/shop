@@ -3,6 +3,6 @@ package tairov.baxti.shop.debetors
 import android.view.View
 
 interface ClickDebtorItem {
-    fun onDelete(itemId: String)
-    fun onEdit(itemId: String)
+    fun onDelete(debtorId: String)
+    fun onEdit(debtorId: String, debtorName: String)
 }

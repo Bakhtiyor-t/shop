@@ -34,7 +34,9 @@ class DebtorAdapter(private val onItemClickListener: ClickDebtorItem): RecyclerV
             onItemClickListener.onDelete(holder.binding.debtorItemId.text.toString())
         }
         holder.binding.edit.setOnClickListener {
-            onItemClickListener.onEdit(holder.binding.debtorItemId.text.toString())
+            val debtorId = holder.binding.debtorItemId.text.toString()
+            val debtorName = holder.binding.tvTitle.text.toString()
+            onItemClickListener.onEdit(debtorId, debtorName)
         }
     }
 
