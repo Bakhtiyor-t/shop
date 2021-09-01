@@ -14,25 +14,25 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import tairov.baxti.shop.databinding.ActivityDebtorsBinding
+import tairov.baxti.shop.dialogs.AddDebtorDialog
 import tairov.baxti.shop.dialogs.EditDebtorDialog
 import kotlin.collections.ArrayList
 
-class Debtors : AppCompatActivity(), EditDebtorDialog.EditDebtorDialogListener {
+class Debtors : AppCompatActivity(),
+    EditDebtorDialog.EditDebtorDialogListener,
+    AddDebtorDialog.AddDebtorDialogListener{
     private lateinit var binding: ActivityDebtorsBinding
     private lateinit var db: FirebaseDatabase
     private lateinit var debtorsRef: DatabaseReference
     private var debtorsList = ArrayList<Debtor>()
     private val editDebtorDialog = EditDebtorDialog()
-
+    private val addNewDebtorDialog = AddDebtorDialog()
     private var adapter = DebtorAdapter(initClickListeners())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityDebtorsBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-
-//        Firebase.database.setPersistenceEnabled(true)
-
 
         db = FirebaseDatabase.getInstance("https://shop-15b50-default-rtdb.europe-west1.firebasedatabase.app")
         debtorsRef = db.getReference("Debtors")
@@ -41,9 +41,8 @@ class Debtors : AppCompatActivity(), EditDebtorDialog.EditDebtorDialogListener {
         binding.debtorsList.adapter = adapter
 
         binding.addDebtor.setOnClickListener {
-            val debtor = Debtor("ghgh", "Sohiba", 123000.0, 230000.0)
-            debtorsRef.push().setValue(debtor)
-//            adapter.addDebtor(debtor)
+            val fm = supportFragmentManager
+            addNewDebtorDialog.show(fm, "addNewDebtorDialog_tag")
         }
         getDataFormDB()
     }
@@ -52,12 +51,10 @@ class Debtors : AppCompatActivity(), EditDebtorDialog.EditDebtorDialogListener {
         debtorsRef.addValueEventListener(object: ValueEventListener{
             @SuppressLint("NotifyDataSetChanged")
             override fun onDataChange(snapshot: DataSnapshot) {
-                Log.d("Mylog", "${snapshot.childrenCount}")
-
-                Log.d("Mylog", "--------------------------------------------------")
+//                Log.d("Mylog", "${snapshot.childrenCount}")
+//                Log.d("Mylog", "--------------------------------------------------")
                 for(debtor in snapshot.children) {
-
-                    Log.d("Mylog", "${debtor.key}")
+//                    Log.d("Mylog", "${debtor.key}")
                     val deb = debtor.getValue<Debtor>()
                     if (deb != null) {
                         deb.id = debtor.key.toString()
@@ -65,7 +62,7 @@ class Debtors : AppCompatActivity(), EditDebtorDialog.EditDebtorDialogListener {
                         debtorsList.add(deb)
                     }
                 }
-                Log.d("Mylog", "--------------------------------------------------")
+//                Log.d("Mylog", "--------------------------------------------------")
                 adapter.addAllDebtors(debtorsList)
                 debtorsList.clear()
             }
@@ -79,7 +76,6 @@ class Debtors : AppCompatActivity(), EditDebtorDialog.EditDebtorDialogListener {
         return object : ClickDebtorItem {
             override fun onDelete(debtorId: String) {
                 debtorsRef.child(debtorId).removeValue()
-                Toast.makeText(baseContext, "Запись удалена", Toast.LENGTH_SHORT).show()
             }
 
             override fun onEdit(debtorId: String, debtorName: String) {
@@ -92,7 +88,6 @@ class Debtors : AppCompatActivity(), EditDebtorDialog.EditDebtorDialogListener {
     }
 
     override fun cancel(dialog: DialogFragment) {
-        Toast.makeText(baseContext, "Exit!", Toast.LENGTH_SHORT).show()
         editDebtorDialog.dismiss()
     }
 
@@ -113,9 +108,15 @@ class Debtors : AppCompatActivity(), EditDebtorDialog.EditDebtorDialogListener {
         }
         if(debt.isNotEmpty()){
             debtorsRef.child(debtorId).child("debt").setValue(debt.toDouble())
-            Toast.makeText(baseContext, "debt: Updated!!!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(baseContext, "Задолженность обновлена", Toast.LENGTH_SHORT).show()
         }
-        Toast.makeText(baseContext, "paid: $paid, debt: $debt", Toast.LENGTH_SHORT).show()
         editDebtorDialog.dismiss()
+    }
+
+    override fun addNewDebtor(dialog: AddDebtorDialog) {
+        val debtorName = dialog.binding.edDebtorName.text.toString()
+        val debtorDebt = dialog.binding.edNewDebt.text.toString().toInt()
+        debtorsRef.push().setValue(Debtor("", debtorName, 0, debtorDebt))
+        addNewDebtorDialog.dismiss()
     }
 }

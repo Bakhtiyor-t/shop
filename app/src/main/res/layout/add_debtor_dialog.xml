@@ -20,39 +20,37 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/debtorName"
+        android:id="@+id/newDebtorName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="45dp"
-        android:layout_weight="1"
-        android:text="@string/nameDebtor"
+        android:text="@string/addDebtor"
         android:textColor="#000000"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
     <EditText
-        android:id="@+id/edPaid"
+        android:id="@+id/edDebtorName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="32dp"
         android:ems="10"
-        android:hint="@string/paid"
+        android:hint="@string/nameDebtor"
         android:importantForAutofill="no"
-        android:inputType="number"
+        android:inputType="textPersonName"
         android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/debtorName"
+        app:layout_constraintTop_toBottomOf="@+id/newDebtorName"
         tools:ignore="TextContrastCheck" />
 
     <EditText
-        android:id="@+id/edDebt"
+        android:id="@+id/edNewDebt"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -61,36 +59,21 @@
         android:importantForAutofill="no"
         android:inputType="number"
         android:minHeight="48dp"
-        app:layout_constraintEnd_toEndOf="@+id/edPaid"
-        app:layout_constraintStart_toStartOf="@+id/edPaid"
-        app:layout_constraintTop_toBottomOf="@+id/edPaid"
+        app:layout_constraintEnd_toEndOf="@+id/edDebtorName"
+        app:layout_constraintStart_toStartOf="@+id/edDebtorName"
+        app:layout_constraintTop_toBottomOf="@+id/edDebtorName"
         tools:ignore="TextContrastCheck" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/addNewDebtor"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:layout_marginBottom="24dp"
-        android:gravity="center"
-        android:orientation="horizontal"
+        android:text="@string/done"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edDebt">
-
-        <Button
-            android:id="@+id/cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            android:text="@string/cancel" />
-
-        <Button
-            android:id="@+id/done"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:text="@string/done" />
-    </LinearLayout>
+        app:layout_constraintEnd_toEndOf="@+id/edNewDebt"
+        app:layout_constraintStart_toStartOf="@+id/edNewDebt"
+        app:layout_constraintTop_toBottomOf="@+id/edNewDebt" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

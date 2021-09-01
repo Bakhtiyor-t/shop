@@ -29,6 +29,7 @@ class EditDebtorDialog(): DialogFragment() {
         binding.debtorName.text = debtorName
         binding.cancel.setOnClickListener {
             listener.cancel(this)
+            resetSettings()
         }
         binding.done.setOnClickListener {
             if(isFieldEmpty()){
@@ -42,12 +43,6 @@ class EditDebtorDialog(): DialogFragment() {
         }
         return binding.root
     }
-
-//    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-//        val dialog = super.onCreateDialog(savedInstanceState)
-//        dialog.setTitle("Изменить")
-//        return dialog
-//    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
