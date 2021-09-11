@@ -72,7 +72,6 @@ class Firms : AppCompatActivity() {
         outState.putSerializable(firmsKey, adapter.firms)
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         firms = savedInstanceState.getSerializable(firmsKey) as ArrayList<Firm>

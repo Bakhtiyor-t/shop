@@ -9,6 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
+        android:background="@drawable/border"
+        android:backgroundTint="#CCC8C8"
         app:cardCornerRadius="15dp"
         app:cardElevation="2dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -16,9 +18,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        app:strokeColor="#000000"
-        app:strokeWidth="1dp">
+        app:layout_constraintVertical_bias="0.0">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -47,7 +47,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
                 android:layout_weight="1"
-                android:maxLines="2" />
+                android:maxLines="2"
+                android:textColor="#000000"
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/tv_pay"
@@ -56,7 +58,9 @@
                 android:layout_marginEnd="5dp"
                 android:background="@color/pay"
                 android:paddingHorizontal="5dp"
-                android:paddingVertical="2dp" />
+                android:paddingVertical="2dp"
+                android:textColor="#000000"
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/tv_debt"
@@ -65,7 +69,9 @@
                 android:layout_marginEnd="5dp"
                 android:background="@color/consumption"
                 android:paddingHorizontal="5dp"
-                android:paddingVertical="2dp" />
+                android:paddingVertical="2dp"
+                android:textColor="#000000"
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/edit"

@@ -43,5 +43,6 @@
     <string name="paid">Оплатил</string>
     <string name="debt">Задолженность</string>
     <string name="addDebtor">Добавить задолжника</string>
+    <string name="totalDebt">Долгов всего:&#160;</string>
 
 </resources>

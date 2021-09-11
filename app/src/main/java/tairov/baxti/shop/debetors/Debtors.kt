@@ -28,6 +28,7 @@ class Debtors : AppCompatActivity(),
     private val editDebtorDialog = EditDebtorDialog()
     private val addNewDebtorDialog = AddDebtorDialog()
     private var adapter = DebtorAdapter(initClickListeners())
+    private var totalDebtCount = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityDebtorsBinding.inflate(layoutInflater)
@@ -35,7 +36,7 @@ class Debtors : AppCompatActivity(),
         setContentView(binding.root)
 
         db = FirebaseDatabase.getInstance("https://shop-15b50-default-rtdb.europe-west1.firebasedatabase.app")
-        debtorsRef = db.getReference("Debtors")
+        debtorsRef = db.getReference("DebtorsTest")
 
         binding.debtorsList.layoutManager = LinearLayoutManager(this)
         binding.debtorsList.adapter = adapter
@@ -51,20 +52,18 @@ class Debtors : AppCompatActivity(),
         debtorsRef.addValueEventListener(object: ValueEventListener{
             @SuppressLint("NotifyDataSetChanged")
             override fun onDataChange(snapshot: DataSnapshot) {
-//                Log.d("Mylog", "${snapshot.childrenCount}")
-//                Log.d("Mylog", "--------------------------------------------------")
+                totalDebtCount = 0
                 for(debtor in snapshot.children) {
-//                    Log.d("Mylog", "${debtor.key}")
                     val deb = debtor.getValue<Debtor>()
                     if (deb != null) {
                         deb.id = debtor.key.toString()
-                        Log.d("Mylog", "$deb")
-                        debtorsList.add(deb)
+                        totalDebtCount += deb.debt
+                        debtorsList.add(0, deb)
                     }
                 }
-//                Log.d("Mylog", "--------------------------------------------------")
                 adapter.addAllDebtors(debtorsList)
                 debtorsList.clear()
+                binding.totalDebt.text = totalDebtCount.toString()
             }
             override fun onCancelled(error: DatabaseError) {
                 TODO("Not yet implemented")
@@ -76,6 +75,7 @@ class Debtors : AppCompatActivity(),
         return object : ClickDebtorItem {
             override fun onDelete(debtorId: String) {
                 debtorsRef.child(debtorId).removeValue()
+                Toast.makeText(baseContext, "Запись удалена", Toast.LENGTH_SHORT).show()
             }
 
             override fun onEdit(debtorId: String, debtorName: String) {
@@ -87,17 +87,19 @@ class Debtors : AppCompatActivity(),
         }
     }
 
-    override fun cancel(dialog: DialogFragment) {
+    override fun cancel(dialog: EditDebtorDialog) {
         editDebtorDialog.dismiss()
     }
 
-    override fun done(dialog: DialogFragment, debtorId: String, paid: String, debt: String) {
+    override fun done(dialog: EditDebtorDialog, debtorId: String) {
+        val paid = dialog.binding.edPaid.text.toString()
+        val debt = dialog.binding.edDebt.text.toString()
         if(paid.isNotEmpty()){
             debtorsRef.child(debtorId).child("pay").setValue(paid.toDouble())
             val dbDebt = debtorsRef.child(debtorId).child("debt")
             dbDebt.addListenerForSingleValueEvent(object: ValueEventListener{
                 override fun onDataChange(snapshot: DataSnapshot) {
-                   val totalDebt = snapshot.value.toString().toDouble() - paid.toDouble()
+                   val totalDebt = snapshot.value.toString().toInt() - paid.toInt()
                    debtorsRef.child(debtorId).child("debt").setValue(totalDebt)
                 }
                 override fun onCancelled(error: DatabaseError) {

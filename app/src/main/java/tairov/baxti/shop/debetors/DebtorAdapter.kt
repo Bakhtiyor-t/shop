@@ -15,8 +15,9 @@ class DebtorAdapter(private val onItemClickListener: ClickDebtorItem): RecyclerV
 
     class DebtorHolder(item: View):RecyclerView.ViewHolder(item){
         val binding = DebtorItemBinding.bind(item)
-        fun bind(debtor: Debtor) = with(binding){
-            tvTitle.text = debtor.name
+        fun bind(debtor: Debtor, position: Int) = with(binding){
+            val debtorName = "${(position+1)}. ${debtor.name}"
+            tvTitle.text = debtorName
             tvPay.text = debtor.pay.toString()
             tvDebt.text = debtor.debt.toString()
             debtorItemId.text = debtor.id
@@ -29,7 +30,7 @@ class DebtorAdapter(private val onItemClickListener: ClickDebtorItem): RecyclerV
     }
 
     override fun onBindViewHolder(holder: DebtorHolder, position: Int) {
-        holder.bind(debtors[position])
+        holder.bind(debtors[position], position)
         holder.binding.delete.setOnClickListener {
             onItemClickListener.onDelete(holder.binding.debtorItemId.text.toString())
         }
@@ -46,8 +47,8 @@ class DebtorAdapter(private val onItemClickListener: ClickDebtorItem): RecyclerV
 
     @SuppressLint("NotifyDataSetChanged")
     fun addDebtor(debtor: Debtor){
-        debtors.add(debtor)
-        notifyDataSetChanged()
+        debtors.add(0,debtor)
+        notifyItemInserted(0)
     }
 
     @SuppressLint("NotifyDataSetChanged")

@@ -19,7 +19,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ShoppingList.ShoppingList"
+            android:name=".shoppingList.ShoppingList"
             android:exported="true" />
         <activity
             android:name=".debetors.Debtors"

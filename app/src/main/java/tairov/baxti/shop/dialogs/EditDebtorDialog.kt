@@ -9,15 +9,15 @@ import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import tairov.baxti.shop.databinding.EditDebtorDialogBinding
 
-class EditDebtorDialog(): DialogFragment() {
-    private lateinit var binding:EditDebtorDialogBinding
+class EditDebtorDialog: DialogFragment() {
+    lateinit var binding:EditDebtorDialogBinding
     lateinit var debtorName: String
     lateinit var debtorId: String
     private lateinit var listener: EditDebtorDialogListener
 
     interface EditDebtorDialogListener {
-        fun cancel(dialog: DialogFragment)
-        fun done(dialog: DialogFragment, debtorId: String, paid: String, debt: String)
+        fun cancel(dialog: EditDebtorDialog)
+        fun done(dialog: EditDebtorDialog, debtorId: String)
     }
 
     override fun onCreateView(
@@ -33,9 +33,7 @@ class EditDebtorDialog(): DialogFragment() {
         }
         binding.done.setOnClickListener {
             if(isFieldEmpty()){
-                val paid = binding.edPaid.text.toString()
-                val debt = binding.edDebt.text.toString()
-                listener.done(this, debtorId=debtorId, paid=paid, debt=debt)
+                listener.done(this, debtorId=debtorId)
                 resetSettings()
             }else{
                 Toast.makeText(context, "Заполните хотябы одно поле", Toast.LENGTH_SHORT).show()
@@ -69,3 +67,28 @@ class EditDebtorDialog(): DialogFragment() {
         binding.edDebt.error = null
     }
 }
+
+
+//override fun onCreateView(
+//    inflater: LayoutInflater,
+//    container: ViewGroup?,
+//    savedInstanceState: Bundle?
+//): View {
+//    binding = EditDebtorDialogBinding.inflate(inflater)
+//    binding.debtorName.text = debtorName
+//    binding.cancel.setOnClickListener {
+//        listener.cancel(this)
+//        resetSettings()
+//    }
+//    binding.done.setOnClickListener {
+//        if(isFieldEmpty()){
+//            val paid = binding.edPaid.text.toString()
+//            val debt = binding.edDebt.text.toString()
+//            listener.done(this, debtorId=debtorId, paid=paid, debt=debt)
+//            resetSettings()
+//        }else{
+//            Toast.makeText(context, "Заполните хотябы одно поле", Toast.LENGTH_SHORT).show()
+//        }
+//    }
+//    return binding.root
+//}

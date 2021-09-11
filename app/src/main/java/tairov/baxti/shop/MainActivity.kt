@@ -4,7 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.google.firebase.auth.FirebaseAuth
-import tairov.baxti.shop.ShoppingList.ShoppingList
+import tairov.baxti.shop.shoppingList.ShoppingList
 import tairov.baxti.shop.firms.Firms
 import tairov.baxti.shop.databinding.ActivityMainBinding
 import tairov.baxti.shop.debetors.Debtors

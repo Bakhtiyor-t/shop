@@ -4,11 +4,14 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import org.intellij.lang.annotations.Language
 import tairov.baxti.shop.MainActivity
 import tairov.baxti.shop.R
 import tairov.baxti.shop.R.*
@@ -22,6 +25,22 @@ class SignInOrSignUp : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySignInOrSignUpBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+//        val animation = AnimationUtils.loadAnimation(this, R.anim.anim)
+//        binding.maiLayout.startAnimation(animation)
+//        animation.setAnimationListener(object : Animation.AnimationListener{
+//            override fun onAnimationStart(p0: Animation?) {
+//
+//            }
+//
+//            override fun onAnimationEnd(p0: Animation?) {
+//                startActivity(Intent(this@SignInOrSignUp, Language::class.java))
+//            }
+//
+//            override fun onAnimationRepeat(p0: Animation?) {
+//
+//            }
+//        })
 
         auth = FirebaseAuth.getInstance()
 //        binding.maiLayout.visibility = View.GONE
