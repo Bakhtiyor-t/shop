@@ -4,6 +4,5 @@ data class Firm(
     var id: String = "",
     var title: String = "",
     var pay: Double = 0.0,
-    var debt: Double = 0.0,
-    var s: Int = 0
+    var debt: Double = 0.0
 ){}
