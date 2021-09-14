@@ -8,6 +8,7 @@
     <string name="firms">Фирмы</string>
     <string name="add">Добавить</string>
     <string name="title">Название фирмы</string>
+    <string name="edit">Редактирование</string>
     <string name="pay">Оплачено</string>
     <string name="duty">Долг</string>
 
@@ -40,8 +41,8 @@
     <string name="done">Готово</string>
     <string name="cancel">Отмена</string>
     <string name="nameDebtor">Имя задолжника</string>
-    <string name="paid">Оплатил</string>
-    <string name="debt">Задолженность</string>
+    <string name="paid">Оплачено</string>
+    <string name="debt">Задолженно</string>
     <string name="addDebtor">Добавить задолжника</string>
     <string name="totalDebt">Долгов всего:&#160;</string>
 

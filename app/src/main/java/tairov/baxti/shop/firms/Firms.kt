@@ -11,23 +11,22 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.toObject
 import tairov.baxti.shop.R
 import tairov.baxti.shop.databinding.ActivityFirmsBinding
+import tairov.baxti.shop.dialogs.EditFirmDialog
 
-class Firms : AppCompatActivity() {
+class Firms : AppCompatActivity(),
+    EditFirmDialog.EditFirmDialogListener
+{
     private lateinit var binding: ActivityFirmsBinding
     private var adapter = FirmAdapter(initClickListeners())
-    private lateinit var db: FirebaseDatabase
-    private lateinit var firmsRef: DatabaseReference
+    private lateinit var db: FirebaseFirestore
+    private val firmsRef: String = "firms"
+    private val firmDetail: String = "firmDetail"
     private val firms = ArrayList<Firm>()
-    var firmsList = arrayListOf(
-        Firm(
-            "1234",
-            "Blihhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhss8",
-            1234567.561,
-            1234567.561,
-        ),
-    )
+    private val editFirmDialog = EditFirmDialog()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,63 +35,102 @@ class Firms : AppCompatActivity() {
         binding.addFirm.setOnClickListener {
             editLauncher.launch(Intent(this, AddFirm::class.java))
         }
+        db = FirebaseFirestore.getInstance()
         initAdapter()
         getFromDatabase()
     }
 
     private fun initAdapter(){
-        binding.firmsList.layoutManager = LinearLayoutManager(this@Firms)
+        binding.firmsList.layoutManager = LinearLayoutManager(this)
         binding.firmsList.adapter = adapter
     }
 
     private fun initClickListeners(): ClickFirm {
         return object: ClickFirm {
-            override fun onClick(item: View) {
-                goToFirmDetail(item)
+            override fun onClick(firm: Firm) {
+                val intent = Intent(this@Firms, FirmDetail::class.java)
+                intent.putExtra(firmDetail, firm)
+                Log.d("Mylog", firm.toString())
+                startActivity((intent))
+            }
+
+            override fun onEdit(firmId: String) {
+                editFirmDialog.firmId = firmId
+                editFirmDialog.show(supportFragmentManager, "editFirmDialog_tag")
+            }
+
+            override fun onDelete(firmId: String) {
+                db.collection(firmsRef).document(firmId).delete()
             }
         }
     }
 
     private fun getFromDatabase(){
-        firmsRef.addValueEventListener(object: ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-                for(firmItem in snapshot.children){
-                    val firm = firmItem.getValue<Firm>()
-                    if (firm != null) {
-                        firm.id = firmItem.key.toString()
-                        firms.add(firm)
-                    }
-                }
-                adapter.addAllFirm(firms)
-                firms.clear()
+        db.collection(firmsRef).addSnapshotListener { firmsList, error ->
+            if(error != null){
+                Log.d("Mylog", "$error")
+                return@addSnapshotListener
             }
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
+            for (firmItem in firmsList!!){
+                val firm = firmItem.toObject<Firm>()
+                firm.id = firmItem.id
+                firms.add(0, firm)
             }
-        })
-    }
-
-    @SuppressLint("CutPasteId")
-    private fun goToFirmDetail(item: View) {
-        val intent = Intent(this, FirmDetail::class.java)
-        val firmDetail = ArrayList<String>()
-        val d = item.findViewById<TextView>(R.id.debtorItemId)
-        Log.d("Mylog", "${d.text}")
-        firmDetail.add(item.findViewById<TextView>(R.id.tv_title).text.toString())
-        firmDetail.add(item.findViewById<TextView>(R.id.tv_title).text.toString())
-        firmDetail.add(item.findViewById<TextView>(R.id.tv_title).text.toString())
-        firmDetail.add(item.findViewById<TextView>(R.id.tv_title).text.toString())
-        intent.putStringArrayListExtra("firmDetail", firmDetail)
-        Log.d("Mylog", "$firmDetail")
-        startActivity((intent))
+            adapter.addAllFirm(firms)
+            firms.clear()
+        }
     }
 
     //    private var editLauncher: ActivityResultLauncher<Intent>? = null
     private val editLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
         if(it.resultCode == RESULT_OK){
-            adapter.addFirm(it.data?.getSerializableExtra("firm") as Firm)
+            setFromDatabase(it.data?.getSerializableExtra("firm") as Firm)
         }
     }
+
+    private fun setFromDatabase(firm: Firm){
+        db.collection("firms")
+            .add(firm)
+            .addOnSuccessListener { documentReference ->
+                Log.d("Mylog", "DocumentSnapshot added with ID: ${documentReference.id}")
+            }
+            .addOnFailureListener { e ->
+                Log.w("Mylog", "Error adding document", e)
+            }
+    }
+
+    override fun done(dialog: EditFirmDialog, firmId: String) {
+        val firmName = dialog.binding.firmName.text.toString()
+        val paid = dialog.binding.paid.text.toString()
+        val debt = dialog.binding.debt.text.toString()
+        val updatingFirmField = mutableMapOf<String, Any>()
+
+        if(firmName.isNotEmpty())
+            updatingFirmField["name"] = firmName
+        if (paid.isNotEmpty())
+            updatingFirmField["pay"] = paid.toDouble()
+        if(debt.isNotEmpty())
+            updatingFirmField["debt"] = debt.toDouble()
+
+        db.collection(firmsRef).document(firmId).update(updatingFirmField)
+        dialog.dismiss()
+    }
+
+
+//    @SuppressLint("CutPasteId")
+//    private fun goToFirmDetail(item: View) {
+//        val intent = Intent(this, FirmDetail::class.java)
+//        val firmDetail = ArrayList<String>()
+//        val d = item.findViewById<TextView>(R.id.debtorItemId)
+//        Log.d("Mylog", "${d.text}")
+//        firmDetail.add(item.findViewById<TextView>(R.id.tv_title).text.toString())
+//        firmDetail.add(item.findViewById<TextView>(R.id.tv_title).text.toString())
+//        firmDetail.add(item.findViewById<TextView>(R.id.tv_title).text.toString())
+//        firmDetail.add(item.findViewById<TextView>(R.id.tv_title).text.toString())
+//        intent.putStringArrayListExtra("firmDetail", firmDetail)
+//        Log.d("Mylog", "$firmDetail")
+//        startActivity((intent))
+//    }
 
 //    override fun onSaveInstanceState(outState: Bundle) {
 //        super.onSaveInstanceState(outState)

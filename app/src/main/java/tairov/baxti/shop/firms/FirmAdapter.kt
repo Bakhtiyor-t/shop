@@ -15,7 +15,7 @@ class FirmAdapter(private val onClickListener: ClickFirm) : RecyclerView.Adapter
         val binding = FirmItemBinding.bind(item)
         fun bind(firm: Firm) = with(binding) {
             firmItemId.text = firm.id.toString()
-            tvTitle.text = firm.title
+            tvTitle.text = firm.name
             tvPay.text = firm.pay.toString()
             tvConsumption.text = firm.debt.toString()
         }
@@ -29,7 +29,13 @@ class FirmAdapter(private val onClickListener: ClickFirm) : RecyclerView.Adapter
     override fun onBindViewHolder(holder: FirmHolder, position: Int) {
         holder.bind(firms[position])
         holder.binding.firmItem.setOnClickListener {
-            onClickListener.onClick(it)
+            onClickListener.onClick(firms[position])
+        }
+        holder.binding.edit.setOnClickListener {
+            onClickListener.onEdit(firms[position].id)
+        }
+        holder.binding.delete.setOnClickListener {
+            onClickListener.onDelete(firms[position].id)
         }
     }
 
