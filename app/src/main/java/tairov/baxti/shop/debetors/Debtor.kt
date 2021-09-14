@@ -10,8 +10,8 @@ class Debtor {
     var debt: Int
 
     constructor(){
-        this.id = null.toString()
-        this.name = null.toString()
+        this.id = ""
+        this.name = ""
         this.pay = 0
         this.debt = 0
     }

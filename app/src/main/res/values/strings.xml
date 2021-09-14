@@ -45,4 +45,9 @@
     <string name="addDebtor">Добавить задолжника</string>
     <string name="totalDebt">Долгов всего:&#160;</string>
 
+<!--    Shopping list-->
+    <string name="addProduct">Добавить товар</string>
+    <string name="productName">Название товара</string>
+    <string name="editProductName">Изменение имени товара</string>
+
 </resources>

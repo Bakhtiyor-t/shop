@@ -9,6 +9,7 @@
         <entry key="..\:/Projects/AndroidStudioProjects/Shop/app/src/main/res/drawable/custom.xml" value="0.2203125" />
         <entry key="..\:/Projects/AndroidStudioProjects/Shop/app/src/main/res/drawable/jj.xml" value="0.2203125" />
         <entry key="..\:/Projects/AndroidStudioProjects/Shop/app/src/main/res/drawable/kk.xml" value="0.2203125" />
+        <entry key="..\:/Projects/AndroidStudioProjects/Shop/app/src/main/res/drawable/sdfs.xml" value="0.19583333333333333" />
         <entry key="..\:/Projects/AndroidStudioProjects/Shop/app/src/main/res/layout/activity_add_firm.xml" value="0.22" />
         <entry key="..\:/Projects/AndroidStudioProjects/Shop/app/src/main/res/layout/activity_debtors.xml" value="0.33" />
         <entry key="..\:/Projects/AndroidStudioProjects/Shop/app/src/main/res/layout/activity_firm_detail.xml" value="0.33" />
@@ -18,9 +19,11 @@
         <entry key="..\:/Projects/AndroidStudioProjects/Shop/app/src/main/res/layout/activity_sign_in_or_sign_up.xml" value="0.1814814814814815" />
         <entry key="..\:/Projects/AndroidStudioProjects/Shop/app/src/main/res/layout/activity_sing_in_and_sing_up.xml" value="0.25" />
         <entry key="..\:/Projects/AndroidStudioProjects/Shop/app/src/main/res/layout/add_debtor_dialog.xml" value="0.22" />
+        <entry key="..\:/Projects/AndroidStudioProjects/Shop/app/src/main/res/layout/add_shopping_list_item.xml" value="0.33" />
         <entry key="..\:/Projects/AndroidStudioProjects/Shop/app/src/main/res/layout/debtor_item.xml" value="0.33" />
         <entry key="..\:/Projects/AndroidStudioProjects/Shop/app/src/main/res/layout/edit_debtor_dialog.xml" value="0.33" />
         <entry key="..\:/Projects/AndroidStudioProjects/Shop/app/src/main/res/layout/firm_item.xml" value="0.33" />
+        <entry key="..\:/Projects/AndroidStudioProjects/Shop/app/src/main/res/layout/shopping_list_item.xml" value="0.33" />
         <entry key="..\:/Projects/AndroidStudioProjects/Shop/app/src/main/res/layout/start_layout.xml" value="0.1814814814814815" />
         <entry key="app/src/main/res/drawable/card_edge.xml" value="0.209375" />
         <entry key="app/src/main/res/drawable/ic_rectangle.xml" value="0.209375" />

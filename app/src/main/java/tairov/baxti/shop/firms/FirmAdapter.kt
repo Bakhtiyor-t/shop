@@ -17,7 +17,7 @@ class FirmAdapter(private val onClickListener: ClickFirm) : RecyclerView.Adapter
             firmItemId.text = firm.id.toString()
             tvTitle.text = firm.title
             tvPay.text = firm.pay.toString()
-            tvConsumption.text = firm.consumption.toString()
+            tvConsumption.text = firm.debt.toString()
         }
     }
 
@@ -39,13 +39,14 @@ class FirmAdapter(private val onClickListener: ClickFirm) : RecyclerView.Adapter
 
     @SuppressLint("NotifyDataSetChanged")
     fun addFirm(firm: Firm){
-        firms.add(firm)
+        firms.add(0, firm)
         notifyDataSetChanged()
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun addAllFirm(firmsList: ArrayList<Firm>){
-        firms = firmsList
+    fun addAllFirm(firmsLists: ArrayList<Firm>){
+        firms.clear()
+        firms.addAll(firmsLists)
         notifyDataSetChanged()
     }
 }

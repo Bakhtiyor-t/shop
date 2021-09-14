@@ -36,7 +36,7 @@ class AddDebtorDialog: DialogFragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         try {
-            listener = context as AddDebtorDialog.AddDebtorDialogListener
+            listener = context as AddDebtorDialogListener
         } catch (e: ClassCastException) {
             throw ClassCastException((context.toString() +
                     " must implement NoticeDialogListener"))
