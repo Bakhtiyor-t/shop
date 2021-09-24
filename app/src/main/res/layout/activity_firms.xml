@@ -28,6 +28,50 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
+    <LinearLayout
+        android:id="@+id/linearLayout4"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/firms_txt">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:text="@string/totalResult"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/totalPaid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:layout_weight="0"
+            android:background="@color/pay"
+            android:paddingHorizontal="5dp"
+            android:paddingVertical="2dp"
+            android:textColor="#004D40" />
+
+        <TextView
+            android:id="@+id/totalDebt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:layout_weight="0"
+            android:background="@color/consumption"
+            android:paddingHorizontal="5dp"
+            android:paddingVertical="2dp"
+            android:textColor="#000000" />
+
+    </LinearLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/firms_list"
         android:layout_width="0dp"
@@ -38,7 +82,7 @@
         app:layout_constraintBottom_toTopOf="@+id/addFirm"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/firms_txt" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout4" />
 
     <Button
         android:id="@+id/addFirm"

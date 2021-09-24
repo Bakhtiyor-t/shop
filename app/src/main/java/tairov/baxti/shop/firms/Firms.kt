@@ -27,13 +27,15 @@ class Firms : AppCompatActivity(),
     private val firmDetail: String = "firmDetail"
     private val firms = ArrayList<Firm>()
     private val editFirmDialog = EditFirmDialog()
+    private var totalPaidCount = 0.0
+    private var totalDebtCount = 0.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityFirmsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.addFirm.setOnClickListener {
-            editLauncher.launch(Intent(this, AddFirm::class.java))
+            addLauncher.launch(Intent(this, AddFirm::class.java))
         }
         db = FirebaseFirestore.getInstance()
         initAdapter()
@@ -50,7 +52,6 @@ class Firms : AppCompatActivity(),
             override fun onClick(firm: Firm) {
                 val intent = Intent(this@Firms, FirmDetail::class.java)
                 intent.putExtra(firmDetail, firm)
-                Log.d("Mylog", firm.toString())
                 startActivity((intent))
             }
 
@@ -67,6 +68,8 @@ class Firms : AppCompatActivity(),
 
     private fun getFromDatabase(){
         db.collection(firmsRef).addSnapshotListener { firmsList, error ->
+            totalPaidCount = 0.0
+            totalDebtCount = 0.0
             if(error != null){
                 Log.d("Mylog", "$error")
                 return@addSnapshotListener
@@ -74,15 +77,19 @@ class Firms : AppCompatActivity(),
             for (firmItem in firmsList!!){
                 val firm = firmItem.toObject<Firm>()
                 firm.id = firmItem.id
+                totalPaidCount += firm.pay
+                totalDebtCount += firm.debt
                 firms.add(0, firm)
             }
             adapter.addAllFirm(firms)
             firms.clear()
+            binding.totalPaid.text = totalPaidCount.toString()
+            binding.totalDebt.text = totalDebtCount.toString()
         }
     }
 
     //    private var editLauncher: ActivityResultLauncher<Intent>? = null
-    private val editLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+    private val addLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
         if(it.resultCode == RESULT_OK){
             setFromDatabase(it.data?.getSerializableExtra("firm") as Firm)
         }

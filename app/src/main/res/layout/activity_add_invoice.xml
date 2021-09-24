@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".firms.AddInvoice">
+
+    <ImageView
+        android:id="@+id/addImage"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="64dp"
+        android:background="@drawable/border"
+        android:contentDescription="@string/imageDesc"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_add_photo" />
+
+    <EditText
+        android:id="@+id/edPayment"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="50dp"
+        android:ems="10"
+        android:hint="@string/payment"
+        android:importantForAutofill="no"
+        android:inputType="numberDecimal"
+        android:minHeight="48dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addImage"
+        tools:ignore="TextContrastCheck" />
+
+    <EditText
+        android:id="@+id/edPaidFor"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="@string/paid_for"
+        android:importantForAutofill="no"
+        android:inputType="numberDecimal"
+        android:minHeight="48dp"
+        app:layout_constraintEnd_toEndOf="@+id/edPayment"
+        app:layout_constraintStart_toStartOf="@+id/edPayment"
+        app:layout_constraintTop_toBottomOf="@+id/edPayment"
+        tools:ignore="TextContrastCheck" />
+
+    <EditText
+        android:id="@+id/edPrevious_debt"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="@string/previous_debt"
+        android:importantForAutofill="no"
+        android:inputType="numberDecimal"
+        android:minHeight="48dp"
+        app:layout_constraintEnd_toEndOf="@+id/edPaidFor"
+        app:layout_constraintStart_toStartOf="@+id/edPaidFor"
+        app:layout_constraintTop_toBottomOf="@+id/edPaidFor"
+        tools:ignore="TextContrastCheck" />
+
+    <EditText
+        android:id="@+id/edTotalDebt"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="@string/total_debt"
+        android:importantForAutofill="no"
+        android:inputType="numberDecimal"
+        android:minHeight="48dp"
+        app:layout_constraintEnd_toEndOf="@+id/edPrevious_debt"
+        app:layout_constraintStart_toStartOf="@+id/edPrevious_debt"
+        app:layout_constraintTop_toBottomOf="@+id/edPrevious_debt"
+        tools:ignore="TextContrastCheck" />
+
+    <Button
+        android:id="@+id/add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/create"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edDate" />
+
+
+    <EditText
+        android:id="@+id/edDate"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:clickable="false"
+        android:enabled="false"
+        android:hint="@string/date"
+        android:importantForAutofill="no"
+        android:inputType="date"
+        android:minHeight="48dp"
+        app:layout_constraintEnd_toStartOf="@+id/addNewDate"
+        app:layout_constraintStart_toStartOf="@+id/edTotalDebt"
+        app:layout_constraintTop_toBottomOf="@+id/edTotalDebt" />
+
+    <Button
+        android:id="@+id/addNewDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/editDate"
+        app:layout_constraintEnd_toEndOf="@+id/edTotalDebt"
+        app:layout_constraintTop_toBottomOf="@+id/edTotalDebt" />
+</androidx.constraintlayout.widget.ConstraintLayout>

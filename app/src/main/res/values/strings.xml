@@ -9,6 +9,7 @@
     <string name="add">Добавить</string>
     <string name="title">Название фирмы</string>
     <string name="edit">Редактирование</string>
+    <string name="totalResult">Всего оплачено, задолженно:&#160;</string>
     <string name="pay">Оплачено</string>
     <string name="duty">Долг</string>
 
@@ -24,8 +25,13 @@
     <string name="paid_for">Оплачено</string>
     <string name="previous_debt">Пред. задолженность</string>
     <string name="total_debt">Общая задолженность</string>
+    <string name="imageDesc">Изображения накладного</string>
+    <string name="date">Дата</string>
+    <string name="editDate">Изменить</string>
+    <string name="create">Создать накладной</string>
+    <string name="delete">Удалить</string>
 
-<!--    Sign in or Sign up-->
+    <!--    Sign in or Sign up-->
 
     <string name="sing_in">Вход</string>
     <string name="sing_up">Регистрация</string>
@@ -36,7 +42,7 @@
     <string name="confirm_password">Подтвердите пароль</string>
     <string name="logout">Выйти</string>
 
-<!--    Debtors-->
+    <!--    Debtors-->
     <string name="debtorsTitle">Задолжники</string>
     <string name="done">Готово</string>
     <string name="cancel">Отмена</string>
@@ -46,7 +52,7 @@
     <string name="addDebtor">Добавить задолжника</string>
     <string name="totalDebt">Долгов всего:&#160;</string>
 
-<!--    Shopping list-->
+    <!--    Shopping list-->
     <string name="addProduct">Добавить товар</string>
     <string name="productName">Название товара</string>
     <string name="editProductName">Изменение имени товара</string>

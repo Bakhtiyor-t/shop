@@ -10,8 +10,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Shop">
         <activity
+            android:name=".firms.InvoiceImage"
+            android:exported="true" />
+        <activity
+            android:name=".firms.AddInvoice"
+            android:exported="true" />
+        <activity
             android:name=".auth.SignInOrSignUp"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -35,9 +41,7 @@
             android:exported="true" />
         <activity
             android:name=".MainActivity"
-            android:exported="true">
-
-        </activity>
+            android:exported="true" />
     </application>
 
 </manifest>
