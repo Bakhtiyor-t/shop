@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="tairov.baxti.shop">
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" /> <!-- <uses-feature android:name="android.hardware.camera.autofocus" /> -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -10,8 +20,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Shop">
         <activity
-            android:name=".auth.SignInOrSignUp"
-            android:exported="true" >
+            android:name=".StartActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -19,7 +29,16 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ShoppingList.ShoppingList"
+            android:name=".firms.InvoiceImage"
+            android:exported="true" />
+        <activity
+            android:name=".firms.AddInvoice"
+            android:exported="true" />
+        <activity
+            android:name=".auth.SignInOrSignUp"
+            android:exported="true"/>
+        <activity
+            android:name=".shoppingList.ShoppingList"
             android:exported="true" />
         <activity
             android:name=".debetors.Debtors"
@@ -35,9 +54,7 @@
             android:exported="true" />
         <activity
             android:name=".MainActivity"
-            android:exported="true">
-
-        </activity>
+            android:exported="true" />
     </application>
 
 </manifest>

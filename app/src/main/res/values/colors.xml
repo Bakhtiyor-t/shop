@@ -8,7 +8,9 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="profit">#0DD715</color>
-    <color name="income">#D7CF0D</color>
-    <color name="consumption">#FF0000</color>
+    <color name="income">#0DD77F</color>
+    <color name="expenses">#FFEB3B</color>
     <color name="pay">#2CCFDA</color>
+    <color name="debt">#FF0000</color>
+    <color name="btn">#FFEB3B</color>
 </resources>

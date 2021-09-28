@@ -3,18 +3,23 @@ package tairov.baxti.shop
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
+import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
-import tairov.baxti.shop.ShoppingList.ShoppingList
-import tairov.baxti.shop.auth.SignInOrSignUp
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import tairov.baxti.shop.shoppingList.ShoppingList
 import tairov.baxti.shop.firms.Firms
 import tairov.baxti.shop.databinding.ActivityMainBinding
 import tairov.baxti.shop.debetors.Debtors
 
 class MainActivity : AppCompatActivity() {
-    val data = arrayOf(231454444,4554)
     private lateinit var binding: ActivityMainBinding
     private lateinit var auth: FirebaseAuth
+    private lateinit var db: FirebaseFirestore
+
+    private var totalPayment = 0.0
+    private var totalPaid = 0.0
+    private var totalProfit = 0.0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,10 +28,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         auth = FirebaseAuth.getInstance()
+        db = FirebaseFirestore.getInstance()
 
-        binding.profit.text = (data[0] - data[1]).toString()
-        binding.income.text = data[0].toString()
-        binding.consumption.text = data[1].toString()
+        getFromDatabase()
         binding.firms.setOnClickListener{
             val firms = Intent(this, Firms::class.java)
             startActivity(firms)
@@ -45,13 +49,36 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun logOut(){
-        auth.signOut()
-        updateUI()
+    private fun init(){
+        binding.profit.text = totalProfit.toString()
+        binding.expenses.text = totalPaid.toString()
+        binding.debt.text = (totalPayment - totalPaid).toString()
     }
 
-    private fun updateUI(){
+    private fun getFromDatabase(){
+        db.collection("invoices")
+            .addSnapshotListener { snapshots, _ ->
+                if (snapshots != null) {
+                    totalProfit = 0.0
+                    totalPayment = 0.0
+                    totalPaid = 0.0
+                    for (snapshot in snapshots){
+                        totalPayment += snapshot["payment"].toString().toDouble()
+                        totalPaid += snapshot["paidFor"].toString().toDouble()
+                    }
+                    totalProfit = totalPayment - totalPaid
+                    init()
+                }
+            }
+    }
+
+    private fun logOut(){
+        auth.signOut()
         finish()
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        moveTaskToBack(true);
+    }
 }
