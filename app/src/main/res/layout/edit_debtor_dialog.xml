@@ -57,7 +57,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:ems="10"
-        android:hint="@string/debt"
+        android:hint="@string/arrears"
         android:importantForAutofill="no"
         android:inputType="number"
         android:minHeight="48dp"

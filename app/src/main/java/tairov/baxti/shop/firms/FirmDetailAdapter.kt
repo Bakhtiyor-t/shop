@@ -40,11 +40,14 @@ class FirmDetailAdapter(val context: Context, private val onClickListener: Click
     override fun onBindViewHolder(holder: FirmDetailHolder, position: Int) {
         holder.bind(invoices[position])
         holder.binding.invoiceImage.setOnClickListener {
-            val bitmap = (holder.binding.invoiceImage.drawable as BitmapDrawable).bitmap
-            onClickListener.imageClick(invoices[position].imageUri, bitmap)
+//            val bitmap = (holder.binding.invoiceImage.drawable as BitmapDrawable).bitmap
+            onClickListener.imageClick(invoices[position].imageUri,)
         }
         holder.binding.delete.setOnClickListener {
             onClickListener.delete(invoices[position].id, invoices[position].imageId)
+        }
+        holder.binding.edit.setOnClickListener {
+            onClickListener.edit(invoices[position].id)
         }
 //        initChildAdapter(holder.binding.productsList, products)
     }

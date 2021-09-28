@@ -13,6 +13,9 @@ import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.toObject
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import kotlinx.coroutines.awaitAll
 import tairov.baxti.shop.R
 import tairov.baxti.shop.databinding.ActivityFirmsBinding
 import tairov.baxti.shop.dialogs.EditFirmDialog
@@ -23,6 +26,7 @@ class Firms : AppCompatActivity(),
     private lateinit var binding: ActivityFirmsBinding
     private var adapter = FirmAdapter(initClickListeners())
     private lateinit var db: FirebaseFirestore
+    private lateinit var storageRef: StorageReference
     private val firmsRef: String = "firms"
     private val firmDetail: String = "firmDetail"
     private val firms = ArrayList<Firm>()
@@ -38,6 +42,7 @@ class Firms : AppCompatActivity(),
             addLauncher.launch(Intent(this, AddFirm::class.java))
         }
         db = FirebaseFirestore.getInstance()
+        storageRef = FirebaseStorage.getInstance().getReference("invoices")
         initAdapter()
         getFromDatabase()
     }
@@ -62,6 +67,15 @@ class Firms : AppCompatActivity(),
 
             override fun onDelete(firmId: String) {
                 db.collection(firmsRef).document(firmId).delete()
+                db.collection("invoices")
+                    .whereEqualTo("firmId", firmId)
+                    .get()
+                    .addOnSuccessListener { snapshots ->
+                        for(snapshot in snapshots){
+                            storageRef.child("${snapshot["imageId"].toString()}.jpg").delete()
+                            snapshot.reference.delete()
+                        }
+                    }
             }
         }
     }
@@ -88,8 +102,8 @@ class Firms : AppCompatActivity(),
         }
     }
 
-    //    private var editLauncher: ActivityResultLauncher<Intent>? = null
-    private val addLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+    private val addLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()){
         if(it.resultCode == RESULT_OK){
             setFromDatabase(it.data?.getSerializableExtra("firm") as Firm)
         }

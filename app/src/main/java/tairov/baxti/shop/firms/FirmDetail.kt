@@ -2,6 +2,8 @@ package tairov.baxti.shop.firms
 
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -25,11 +27,17 @@ import kotlin.collections.ArrayList
 import android.widget.LinearLayout
 
 import android.widget.Toast
+import tairov.baxti.shop.dialogs.EditFirmDetailDialog
+import java.io.ByteArrayOutputStream
 
-class FirmDetail : AppCompatActivity() {
+class FirmDetail : AppCompatActivity(),
+    EditFirmDetailDialog.EditFirmDetailDialogListener
+{
     private lateinit var binding: ActivityFirmDetailBinding
     private var adapter = FirmDetailAdapter(this, initListeners())
     private lateinit var storageRef: StorageReference
+
+    val editFirmDetailDialog = EditFirmDetailDialog()
 
     private val firmDetailKey: String = "firmDetail"
     private var firmDetail = Firm()
@@ -79,9 +87,14 @@ class FirmDetail : AppCompatActivity() {
 
     private fun initListeners(): ClickFirmDetail {
         return object: ClickFirmDetail{
-            override fun imageClick(imageUri: String, imageBitmap: Bitmap) {
+            override fun imageClick(imageUri: String) {
                 val intent = Intent(this@FirmDetail, InvoiceImage::class.java)
-                intent.putExtra("imageBitmap", imageBitmap)
+//                val bitmap = (imageBitmap as BitmapDrawable).bitmap
+//                val baos = ByteArrayOutputStream()
+//                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+//                val data = baos.toByteArray()
+//                intent.putExtra("imageBitmap", data)
+                intent.putExtra("imageUri", imageUri)
                 startActivity(intent)
                 Toast.makeText(this@FirmDetail, "Image URL: $imageUri", Toast.LENGTH_SHORT).show()
             }
@@ -90,7 +103,36 @@ class FirmDetail : AppCompatActivity() {
                 db.collection("invoices").document(invoiceId).delete()
                 storageRef.child("$imageId.jpg").delete()
             }
+
+            override fun edit(invoiceId: String) {
+                val fm = supportFragmentManager
+                editFirmDetailDialog.invoiceId = invoiceId
+                editFirmDetailDialog.show(fm, "editFirmDetailDialog")
+            }
         }
+    }
+
+    override fun done(dialog: EditFirmDetailDialog) {
+        val updatedData = mutableMapOf<String, Any>()
+        val payment = dialog.binding.edPayment.text.toString()
+        val paidFor = dialog.binding.edPaidFor.text.toString()
+        val previousDebt = dialog.binding.edPreviousDebt.text.toString()
+        val totalDebt = dialog.binding.edTotalDebt.text.toString()
+
+        if(payment.isNotEmpty())
+            updatedData["payment"] = payment.toDouble()
+        if (paidFor.isNotEmpty())
+            updatedData["paidFor"] = paidFor.toDouble()
+        if(previousDebt.isNotEmpty())
+            updatedData["previousDebt"] = previousDebt.toDouble()
+        if(totalDebt.isNotEmpty())
+            updatedData["totalDebt"] = totalDebt.toDouble()
+
+        db.collection("invoices")
+            .document(dialog.invoiceId)
+            .update(updatedData)
+
+        dialog.dismiss()
     }
 
 //    private val addInvoice = registerForActivityResult(

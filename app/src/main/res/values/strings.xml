@@ -2,7 +2,7 @@
     <string name="app_name">Shop</string>
     <string name="profit">Прибыль</string>
     <string name="income">Доход</string>
-    <string name="consumption">Расход</string>
+    <string name="expenses">Расходы</string>
     <string name="shopping_list">Список покупок</string>
     <string name="debtors">Задолжники</string>
     <string name="firms">Фирмы</string>
@@ -11,7 +11,7 @@
     <string name="edit">Редактирование</string>
     <string name="totalResult">Всего оплачено, задолженно:&#160;</string>
     <string name="pay">Оплачено</string>
-    <string name="duty">Долг</string>
+    <string name="debt">Долг</string>
 
     <!--    Firm detail -->
     <string name="number">№</string>
@@ -48,7 +48,7 @@
     <string name="cancel">Отмена</string>
     <string name="nameDebtor">Имя задолжника</string>
     <string name="paid">Оплачено</string>
-    <string name="debt">Задолженно</string>
+    <string name="arrears">Задолженность</string>
     <string name="addDebtor">Добавить задолжника</string>
     <string name="totalDebt">Долгов всего:&#160;</string>
 

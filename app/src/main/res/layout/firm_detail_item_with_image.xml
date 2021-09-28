@@ -118,15 +118,6 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/paid_for"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@drawable/border_bottom"
-                        android:gravity="center"
-                        android:textColor="@color/black" />
-
-                    <TextView
                         android:id="@+id/payment"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -134,6 +125,15 @@
                         android:background="@drawable/border_bottom"
                         android:gravity="center"
                         android:maxLines="1"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/paid_for"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/border_bottom"
+                        android:gravity="center"
                         android:textColor="@color/black" />
 
                     <TextView
@@ -175,13 +175,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
                 android:layout_weight="0"
-                android:backgroundTint="@color/consumption"
+                android:backgroundTint="@color/debt"
                 android:text="@string/delete"
                 android:textColor="@color/white"
                 tools:ignore="TextContrastCheck" />
 
             <Button
-                android:id="@+id/button3"
+                android:id="@+id/edit"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

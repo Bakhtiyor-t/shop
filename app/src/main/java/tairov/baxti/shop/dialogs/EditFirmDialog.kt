@@ -42,7 +42,7 @@ class EditFirmDialog: DialogFragment() {
             listener = context as EditFirmDialogListener
         } catch (e: ClassCastException) {
             throw ClassCastException((context.toString() +
-                    " must implement NoticeDialogListener"))
+                    " must implement EditFirmDialogListener"))
         }
     }
 

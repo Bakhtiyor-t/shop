@@ -1,8 +1,12 @@
 package tairov.baxti.shop.firms
 
+import android.Manifest
 import android.app.DatePickerDialog
+import android.content.ContentValues
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Build
@@ -28,6 +32,8 @@ import java.util.*
 import java.util.zip.DataFormatException
 import android.os.Environment
 import androidx.core.net.toFile
+import androidx.core.content.FileProvider
+import java.text.SimpleDateFormat
 
 
 class AddInvoice : AppCompatActivity() {
@@ -42,7 +48,7 @@ class AddInvoice : AppCompatActivity() {
 
     private var imageUri: Uri? = null
     private var date: String = ""
-    private lateinit var file: File
+    private val PERMISSION_CODE = 1000
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,20 +60,69 @@ class AddInvoice : AppCompatActivity() {
         firmDetail = intent.getSerializableExtra(firmDetailKey) as Firm
 
         binding.addImage.setOnClickListener {
-//            val intent = Intent()
-//            intent.type = "image/*"
-//            intent.action = Intent.ACTION_GET_CONTENT
-//            val mUri = Uri.fromFile(File("/document/photo.jpeg"))
-            val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            addLauncher.launch(intent)
+            checkPermissions()
         }
         binding.add.setOnClickListener {
             addNewInvoice()
         }
-
         binding.addNewDate.setOnClickListener {
             addDate()
         }
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        if (imageUri != null)
+            binding.addImage.setImageURI(imageUri)
+    }
+
+    private fun checkPermissions(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_DENIED ||
+                checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_DENIED){
+                //permission was not enabled
+                val permission = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                //show popup to request permission
+                requestPermissions(permission, PERMISSION_CODE)
+            }
+            else{
+                //permission already granted
+                openCamera()
+            }
+        }
+        else{
+            //system os is < marshmallow
+            openCamera()
+        }
+    }
+
+    private fun openCamera(){
+//        val intent = Intent()
+//            intent.type = "image/*"
+//            intent.action = Intent.ACTION_GET_CONTENT
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        val values = ContentValues()
+        values.put(MediaStore.Images.Media.TITLE, "New Picture")
+        values.put(MediaStore.Images.Media.DESCRIPTION, "From the Camera")
+        imageUri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
+        startActivity(intent)
+//        addLauncher.launch(intent)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        if(requestCode == PERMISSION_CODE){
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    openCamera()
+                }
+                else{
+                    Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show()
+                }
+            }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     private fun addDate(){
@@ -78,7 +133,6 @@ class AddInvoice : AppCompatActivity() {
         val dpd = DatePickerDialog(this, { view, year, monthOfYear, dayOfMonth ->
 //                date = LocalDate.of(year, monthOfYear, dayOfMonth)
             date = "$dayOfMonth/$monthOfYear/$year"
-            Log.d("Mylog", date)
             binding.edDate.setText(date)
         }, year1, month, day)
         dpd.show()
@@ -86,40 +140,20 @@ class AddInvoice : AppCompatActivity() {
 
     private fun addNewInvoice(){
         if(!isFieldEmpty()){
+            val payment = binding.edPayment.text.toString().toDouble()
+            val paidFor = binding.edPaidFor.text.toString().toDouble()
+            val previousDebt = binding.edPreviousDebt.text.toString().toDouble()
+            val totalDebt = payment - paidFor + previousDebt
             val invoice = Invoice(
-                id = "",
-                firmId = "",
-                payment = binding.edPayment.text.toString().toDouble(),
-                paidFor = binding.edPaidFor.text.toString().toDouble(),
-                previousDebt = binding.edPreviousDebt.text.toString().toDouble(),
-                totalDebt = binding.edTotalDebt.text.toString().toDouble(),
+                payment = payment,
+                paidFor = paidFor,
+                previousDebt = previousDebt,
+                totalDebt = if(binding.edTotalDebt.text.isNullOrEmpty()) totalDebt
+                            else binding.edTotalDebt.text.toString().toDouble(),
                 date = date
             )
-
             uploadInvoiceImage(invoice)
             finish()
-//            val intent = Intent().apply {
-//                putExtra("invoice", invoice)
-//            }
-//            setResult(RESULT_OK, intent)
-//            finish()
-        }
-    }
-
-    private lateinit var bitmap: Bitmap
-    private val addLauncher = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()){ result ->
-        if(result.resultCode == RESULT_OK && result != null){
-            if(result.data != null){
-                bitmap = result.data!!.extras!!.get("data") as Bitmap
-                binding.addImage.setImageBitmap(bitmap)
-                imageUri = "sad".toUri()
-//                binding.addImage.setImageURI(result.data!!.data)
-//                imageUri = result.data!!.data
-//                imageUri = result.data!!.data
-            }
-        }else{
-            Log.d("Mylog", "result: $result")
         }
     }
 
@@ -127,9 +161,9 @@ class AddInvoice : AppCompatActivity() {
         val imageId = UUID.randomUUID()
         val invoiceRef = storageRef.child("$imageId.jpg")
 
-//        val bitmap = (binding.addImage.drawable as BitmapDrawable).bitmap
+        val bitmap = (binding.addImage.drawable as BitmapDrawable).bitmap
         val baos = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 10, baos)
         val data = baos.toByteArray()
 
         val uploadTask = invoiceRef.putBytes(data)
@@ -165,7 +199,6 @@ class AddInvoice : AppCompatActivity() {
     }
 
     private fun isFieldEmpty(): Boolean{
-        var imageFlag = false
         binding.apply {
             if(imageUri == null){
                 Toast.makeText(
@@ -173,21 +206,38 @@ class AddInvoice : AppCompatActivity() {
                     "Пожалуйста выберите Изображения",
                     Toast.LENGTH_LONG
                 ).show()
-                imageFlag = true
             }
             if(edPayment.text.isNullOrEmpty()) edPayment.error = "Поле должно быть заполнено"
             if(edPaidFor.text.isNullOrEmpty()) edPaidFor.error = "Поле должно быть заполнено"
             if(edPreviousDebt.text.isNullOrEmpty()) edPreviousDebt.error = "Поле должно быть заполнено"
-            if(edTotalDebt.text.isNullOrEmpty()) edTotalDebt.error = "Поле должно быть заполнено"
+//            if(edTotalDebt.text.isNullOrEmpty()) edTotalDebt.error = "Поле должно быть заполнено"
             if(edDate.text.isNullOrEmpty()) edDate.error = "Поле должно быть заполнено"
             return  (
                     edPayment.text.isNullOrEmpty() ||
                             edPaidFor.text.isNullOrEmpty() ||
                             edPreviousDebt.text.isNullOrEmpty() ||
-                            edTotalDebt.text.isNullOrEmpty() ||
+//                            edTotalDebt.text.isNullOrEmpty() ||
                             edDate.text.isNullOrEmpty() ||
-                            imageFlag
+                            imageUri == null
                     )
         }
     }
+
+
+    //    private val addLauncher = registerForActivityResult(
+//        ActivityResultContracts.StartActivityForResult()){ _ ->
+//        Log.d("Mylog", "aaaa $imageUri")
+//        binding.addImage.setImageURI(imageUri)
+////        if(result.resultCode == RESULT_OK && result != null){
+////            if(result.data != null){
+////                val bitmap = BitmapFactory.decodeFile(photoFile!!.absolutePath)
+////                Log.d("Mylog", "sssss: $bitmap")
+////                binding.addImage.setImageBitmap(bitmap)
+////                bitmap = result.data!!.extras!!.get("data") as Bitmap
+////                binding.addImage.setImageBitmap(bitmap)
+////                imageUri = result.data!!.data
+////                imageUri = result.data!!.data
+////            }
+////        }
+//    }
 }

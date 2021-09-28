@@ -26,22 +26,6 @@ class SignInOrSignUp : AppCompatActivity() {
         binding = ActivitySignInOrSignUpBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-//        val animation = AnimationUtils.loadAnimation(this, R.anim.anim)
-//        binding.maiLayout.startAnimation(animation)
-//        animation.setAnimationListener(object : Animation.AnimationListener{
-//            override fun onAnimationStart(p0: Animation?) {
-//
-//            }
-//
-//            override fun onAnimationEnd(p0: Animation?) {
-//                startActivity(Intent(this@SignInOrSignUp, Language::class.java))
-//            }
-//
-//            override fun onAnimationRepeat(p0: Animation?) {
-//
-//            }
-//        })
-
         auth = FirebaseAuth.getInstance()
 //        binding.maiLayout.visibility = View.GONE
 //        binding.maiLayout.setBackgroundColor(ContextCompat.getColor(this, color.black))
@@ -56,17 +40,6 @@ class SignInOrSignUp : AppCompatActivity() {
                 Toast.makeText(this, "Регистрация пока не доступно", Toast.LENGTH_SHORT).show()
             }
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        val currentUser = auth.currentUser
-        if(currentUser != null){
-            updateUI()
-        }
-//        else{
-//            binding.maiLayout.visibility = View.VISIBLE
-//        }
     }
 
     private fun signIn(email: String, password: String){
@@ -87,6 +60,7 @@ class SignInOrSignUp : AppCompatActivity() {
         binding.confirmPassword.text = null
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
+        finish()
     }
 
     private fun singInOrSingUpSelect(){
@@ -119,5 +93,10 @@ class SignInOrSignUp : AppCompatActivity() {
 
             return  email.text.isNullOrEmpty() || password.text.isNullOrEmpty() || passwordConfirm
         }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        moveTaskToBack(true);
     }
 }
