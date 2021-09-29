@@ -1,4 +1,4 @@
-package tairov.baxti.shop.firms
+package tairov.baxti.shop.firms.firmDetail
 
 import android.Manifest
 import android.app.DatePickerDialog
@@ -6,7 +6,6 @@ import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Build
@@ -14,26 +13,18 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import android.widget.DatePicker
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import androidx.core.net.toUri
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import tairov.baxti.shop.R
+import tairov.baxti.shop.MainConsts
 import tairov.baxti.shop.databinding.ActivityAddInvoiceBinding
 import java.io.ByteArrayOutputStream
-import java.io.File
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.*
-import java.util.zip.DataFormatException
-import android.os.Environment
-import androidx.core.net.toFile
-import androidx.core.content.FileProvider
-import java.text.SimpleDateFormat
+import tairov.baxti.shop.firms.Firm
+import tairov.baxti.shop.firms.FirmsConsts
+import java.time.LocalDate
 
 
 class AddInvoice : AppCompatActivity() {
@@ -42,22 +33,21 @@ class AddInvoice : AppCompatActivity() {
 
     private lateinit var db: FirebaseFirestore
     private var downloadUri: Uri? = null
-
-    private val firmDetailKey: String = "firmDetail"
     private var firmDetail = Firm()
 
     private var imageUri: Uri? = null
-    private var date: String = ""
+    private lateinit var date: LocalDate
     private val PERMISSION_CODE = 1000
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddInvoiceBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         db = FirebaseFirestore.getInstance()
-        storageRef = FirebaseStorage.getInstance().getReference("invoices")
-        firmDetail = intent.getSerializableExtra(firmDetailKey) as Firm
+        storageRef = FirebaseStorage.getInstance().getReference(InvoicesConsts.INVOICES)
+        firmDetail = intent.getSerializableExtra(FirmsConsts.FIRM_DETAIL) as Firm
 
         binding.addImage.setOnClickListener {
             checkPermissions()
@@ -83,7 +73,10 @@ class AddInvoice : AppCompatActivity() {
                 checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_DENIED){
                 //permission was not enabled
-                val permission = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                val permission = arrayOf(
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                )
                 //show popup to request permission
                 requestPermissions(permission, PERMISSION_CODE)
             }
@@ -113,7 +106,11 @@ class AddInvoice : AppCompatActivity() {
 //        addLauncher.launch(intent)
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         if(requestCode == PERMISSION_CODE){
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
                     openCamera()
@@ -125,15 +122,16 @@ class AddInvoice : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun addDate(){
         val calendar = Calendar.getInstance()
         val year1 = calendar.get(Calendar.YEAR)
         val month = calendar.get(Calendar.MONTH)
         val day = calendar.get(Calendar.DAY_OF_MONTH)
-        val dpd = DatePickerDialog(this, { view, year, monthOfYear, dayOfMonth ->
-//                date = LocalDate.of(year, monthOfYear, dayOfMonth)
-            date = "$dayOfMonth/$monthOfYear/$year"
-            binding.edDate.setText(date)
+
+        val dpd = DatePickerDialog(this, { _, year, monthOfYear, dayOfMonth ->
+            date = LocalDate.of(year, monthOfYear, dayOfMonth)
+            binding.edDate.setText(date.format(FirmsConsts.FORMATTER))
         }, year1, month, day)
         dpd.show()
     }
@@ -177,7 +175,7 @@ class AddInvoice : AppCompatActivity() {
         }.addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 downloadUri = task.result
-                val invoiceId = db.collection("invoices").document().id
+                val invoiceId = db.collection(InvoicesConsts.INVOICES).document().id
                 invoice.id = invoiceId
                 invoice.firmId = firmDetail.id
                 invoice.imageUri = downloadUri.toString()
@@ -188,13 +186,13 @@ class AddInvoice : AppCompatActivity() {
     }
 
     private fun setFromDatabase(invoice: Invoice){
-        db.collection("invoices").document(invoice.id)
+        db.collection(InvoicesConsts.INVOICES).document(invoice.id)
             .set(invoice)
             .addOnSuccessListener {
-                Log.d("Mylog", "DocumentSnapshot added with ID: ")
+                Log.d(MainConsts.LOG_TAG, "DocumentSnapshot added with ID: ")
             }
             .addOnFailureListener { e ->
-                Log.w("Mylog", "Error adding document", e)
+                Log.w(MainConsts.LOG_TAG, "Error adding document", e)
             }
     }
 

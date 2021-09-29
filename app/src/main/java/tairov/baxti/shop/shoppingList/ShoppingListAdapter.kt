@@ -21,7 +21,7 @@ class ShoppingListAdapter(private val onItemClickListener: ClickShoppingListItem
     class ShoppingListHolder(item: View): RecyclerView.ViewHolder(item) {
         val binding = ShoppingListItemBinding.bind(item)
         fun bind(product: ShoppingListItem) = with(binding) {
-            productItemId.text = product.productId.toString()
+            productItemId.text = product.productId
 //            if(product.done){
 //                productName.text = Html.fromHtml(
 //                    "<del>${product.productName}</del>",

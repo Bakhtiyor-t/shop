@@ -12,8 +12,11 @@ class AddItemToShoppingList: DialogFragment() {
     lateinit var binding: AddShoppingListItemBinding
     private lateinit var listener: AddShoppingListItemListener
     interface AddShoppingListItemListener{
-        fun addNewProduct(dialog: AddItemToShoppingList)
+        fun add(dialog: AddItemToShoppingList)
     }
+
+    var title: String? = null
+    var hint: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -21,9 +24,13 @@ class AddItemToShoppingList: DialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = AddShoppingListItemBinding.inflate(inflater)
+        if(title != null && hint != null ){
+            binding.productTitle.text = title
+            binding.newProductName.hint = hint
+        }
         binding.addNewProduct.setOnClickListener {
             if(!isFieldEmpty()){
-                listener.addNewProduct(this)
+                listener.add(this)
                 resetSettings()
             }
         }

@@ -1,34 +1,32 @@
 package tairov.baxti.shop.firms
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.widget.TextView
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.database.*
-import com.google.firebase.database.ktx.getValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import kotlinx.coroutines.awaitAll
+import tairov.baxti.shop.MainConsts
 import tairov.baxti.shop.R
 import tairov.baxti.shop.databinding.ActivityFirmsBinding
+import tairov.baxti.shop.dialogs.AddItemToShoppingList
 import tairov.baxti.shop.dialogs.EditFirmDialog
+import tairov.baxti.shop.firms.firmDetail.FirmDetail
+import tairov.baxti.shop.firms.firmDetail.InvoicesConsts
 
 class Firms : AppCompatActivity(),
-    EditFirmDialog.EditFirmDialogListener
+    EditFirmDialog.EditFirmDialogListener,
+    AddItemToShoppingList.AddShoppingListItemListener
 {
     private lateinit var binding: ActivityFirmsBinding
     private var adapter = FirmAdapter(initClickListeners())
+    private val addNewFirm = AddItemToShoppingList()
     private lateinit var db: FirebaseFirestore
     private lateinit var storageRef: StorageReference
-    private val firmsRef: String = "firms"
-    private val firmDetail: String = "firmDetail"
     private val firms = ArrayList<Firm>()
     private val editFirmDialog = EditFirmDialog()
     private var totalPaidCount = 0.0
@@ -39,10 +37,13 @@ class Firms : AppCompatActivity(),
         binding = ActivityFirmsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.addFirm.setOnClickListener {
-            addLauncher.launch(Intent(this, AddFirm::class.java))
+//            addLauncher.launch(Intent(this, AddFirm::class.java))
+            addNewFirm.title = getString(R.string.addFirm)
+            addNewFirm.hint = getString(R.string.title)
+            addNewFirm.show(supportFragmentManager, "addNewFirm_tag")
         }
         db = FirebaseFirestore.getInstance()
-        storageRef = FirebaseStorage.getInstance().getReference("invoices")
+        storageRef = FirebaseStorage.getInstance().getReference(InvoicesConsts.INVOICES)
         initAdapter()
         getFromDatabase()
     }
@@ -56,7 +57,7 @@ class Firms : AppCompatActivity(),
         return object: ClickFirm {
             override fun onClick(firm: Firm) {
                 val intent = Intent(this@Firms, FirmDetail::class.java)
-                intent.putExtra(firmDetail, firm)
+                intent.putExtra(FirmsConsts.FIRM_DETAIL, firm)
                 startActivity((intent))
             }
 
@@ -66,13 +67,15 @@ class Firms : AppCompatActivity(),
             }
 
             override fun onDelete(firmId: String) {
-                db.collection(firmsRef).document(firmId).delete()
-                db.collection("invoices")
-                    .whereEqualTo("firmId", firmId)
+                db.collection(FirmsConsts.FIRMS).document(firmId).delete()
+                db.collection(InvoicesConsts.INVOICES)
+                    .whereEqualTo(InvoicesConsts.FIRM_ID, firmId)
                     .get()
                     .addOnSuccessListener { snapshots ->
                         for(snapshot in snapshots){
-                            storageRef.child("${snapshot["imageId"].toString()}.jpg").delete()
+                            storageRef.child(
+                                "${snapshot[InvoicesConsts.IMAGE_ID].toString()}.jpg"
+                            ).delete()
                             snapshot.reference.delete()
                         }
                     }
@@ -81,11 +84,11 @@ class Firms : AppCompatActivity(),
     }
 
     private fun getFromDatabase(){
-        db.collection(firmsRef).addSnapshotListener { firmsList, error ->
+        db.collection(FirmsConsts.FIRMS).addSnapshotListener { firmsList, error ->
             totalPaidCount = 0.0
             totalDebtCount = 0.0
             if(error != null){
-                Log.d("Mylog", "$error")
+                Log.d(MainConsts.LOG_TAG, "$error")
                 return@addSnapshotListener
             }
             for (firmItem in firmsList!!){
@@ -102,38 +105,45 @@ class Firms : AppCompatActivity(),
         }
     }
 
-    private val addLauncher = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()){
-        if(it.resultCode == RESULT_OK){
-            setFromDatabase(it.data?.getSerializableExtra("firm") as Firm)
-        }
-    }
+//    private val addLauncher = registerForActivityResult(
+//        ActivityResultContracts.StartActivityForResult()){
+//        if(it.resultCode == RESULT_OK){
+//            setFromDatabase(it.data?.getSerializableExtra("firm") as Firm)
+//        }
+//    }
 
     private fun setFromDatabase(firm: Firm){
-        db.collection("firms")
+        db.collection(FirmsConsts.FIRMS)
             .add(firm)
             .addOnSuccessListener { documentReference ->
-                Log.d("Mylog", "DocumentSnapshot added with ID: ${documentReference.id}")
+                Log.d(MainConsts.LOG_TAG,
+                    "DocumentSnapshot added with ID: ${documentReference.id}")
             }
             .addOnFailureListener { e ->
-                Log.w("Mylog", "Error adding document", e)
+                Log.w(MainConsts.LOG_TAG, "Error adding document", e)
             }
     }
 
     override fun done(dialog: EditFirmDialog, firmId: String) {
         val firmName = dialog.binding.firmName.text.toString()
-        val paid = dialog.binding.paid.text.toString()
-        val debt = dialog.binding.debt.text.toString()
+//        val paid = dialog.binding.paid.text.toString()
+//        val debt = dialog.binding.debt.text.toString()
         val updatingFirmField = mutableMapOf<String, Any>()
 
         if(firmName.isNotEmpty())
-            updatingFirmField["name"] = firmName
-        if (paid.isNotEmpty())
-            updatingFirmField["pay"] = paid.toDouble()
-        if(debt.isNotEmpty())
-            updatingFirmField["debt"] = debt.toDouble()
+            updatingFirmField[FirmsConsts.FIRM_NAME] = firmName
+//        if (paid.isNotEmpty())
+//            updatingFirmField[FirmsConst.FIRM_PAY] = paid.toDouble()
+//        if(debt.isNotEmpty())
+//            updatingFirmField[FirmsConst.FIRM_DEBT] = debt.toDouble()
 
-        db.collection(firmsRef).document(firmId).update(updatingFirmField)
+        db.collection(FirmsConsts.FIRMS).document(firmId).update(updatingFirmField)
+        dialog.dismiss()
+    }
+
+    override fun add(dialog: AddItemToShoppingList) {
+        val firmName = dialog.binding.newProductName.text.toString()
+        setFromDatabase(Firm(name=firmName))
         dialog.dismiss()
     }
 

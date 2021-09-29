@@ -1,4 +1,4 @@
-package tairov.baxti.shop.firms
+package tairov.baxti.shop.firms.firmDetail
 
 import android.view.LayoutInflater
 import android.view.View

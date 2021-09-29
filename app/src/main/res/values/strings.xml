@@ -7,11 +7,13 @@
     <string name="debtors">Задолжники</string>
     <string name="firms">Фирмы</string>
     <string name="add">Добавить</string>
+    <string name="addFirm">Добавиление фирмы</string>
     <string name="title">Название фирмы</string>
     <string name="edit">Редактирование</string>
     <string name="totalResult">Всего оплачено, задолженно:&#160;</string>
     <string name="pay">Оплачено</string>
     <string name="debt">Долг</string>
+    <string name="cashbox">Касса</string>
 
     <!--    Firm detail -->
     <string name="number">№</string>

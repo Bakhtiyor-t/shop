@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import tairov.baxti.shop.shoppingList.ShoppingList
@@ -16,10 +18,14 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
+    private lateinit var realTimeDb: FirebaseDatabase
+    private lateinit var realTimeDbRef: DatabaseReference
 
     private var totalPayment = 0.0
+    private var totalPreviousDebt = 0.0
     private var totalPaid = 0.0
     private var totalProfit = 0.0
+    private var totalDebt = 0.0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,8 +35,14 @@ class MainActivity : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
+        realTimeDb = FirebaseDatabase.getInstance()
+        realTimeDbRef = realTimeDb.reference
 
         getFromDatabase()
+        initClickListeners()
+    }
+
+    private fun initClickListeners(){
         binding.firms.setOnClickListener{
             val firms = Intent(this, Firms::class.java)
             startActivity(firms)
@@ -43,31 +55,38 @@ class MainActivity : AppCompatActivity() {
             val shoppingList = Intent(this, ShoppingList::class.java)
             startActivity(shoppingList)
         }
+        binding.expensesBtn.setOnClickListener {
 
+        }
+        binding.cashBox.setOnClickListener {
+
+        }
         binding.logOut.setOnClickListener {
             logOut()
         }
     }
 
-    private fun init(){
+    private fun setValues(){
         binding.profit.text = totalProfit.toString()
         binding.expenses.text = totalPaid.toString()
-        binding.debt.text = (totalPayment - totalPaid).toString()
+        binding.debt.text = totalDebt.toString()
     }
 
     private fun getFromDatabase(){
         db.collection("invoices")
             .addSnapshotListener { snapshots, _ ->
                 if (snapshots != null) {
-                    totalProfit = 0.0
                     totalPayment = 0.0
+                    totalPreviousDebt = 0.0
                     totalPaid = 0.0
+                    totalDebt = 0.0
                     for (snapshot in snapshots){
-                        totalPayment += snapshot["payment"].toString().toDouble()
+//                        totalPayment += snapshot["payment"].toString().toDouble()
                         totalPaid += snapshot["paidFor"].toString().toDouble()
+//                        totalPreviousDebt += snapshot["previousDebt"].toString().toDouble()
+                        totalDebt += snapshot["totalDebt"].toString().toDouble()
                     }
-                    totalProfit = totalPayment - totalPaid
-                    init()
+                    setValues()
                 }
             }
     }
@@ -79,6 +98,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        moveTaskToBack(true);
+        moveTaskToBack(true)
     }
 }

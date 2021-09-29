@@ -20,6 +20,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Shop">
         <activity
+            android:name=".cashBox.CashBox"
+            android:exported="true" />
+        <activity
+            android:name=".expenses.Expenses"
+            android:exported="true" />
+        <activity
             android:name=".StartActivity"
             android:exported="true">
             <intent-filter>
@@ -29,14 +35,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".firms.InvoiceImage"
+            android:name=".firms.firmDetail.InvoiceImage"
             android:exported="true" />
         <activity
-            android:name=".firms.AddInvoice"
+            android:name=".firms.firmDetail.AddInvoice"
             android:exported="true" />
         <activity
             android:name=".auth.SignInOrSignUp"
-            android:exported="true"/>
+            android:exported="true" />
         <activity
             android:name=".shoppingList.ShoppingList"
             android:exported="true" />
@@ -47,7 +53,7 @@
             android:name=".firms.AddFirm"
             android:exported="true" />
         <activity
-            android:name=".firms.FirmDetail"
+            android:name=".firms.firmDetail.FirmDetail"
             android:exported="true" />
         <activity
             android:name=".firms.Firms"

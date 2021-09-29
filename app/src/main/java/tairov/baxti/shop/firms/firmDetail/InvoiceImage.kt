@@ -1,4 +1,4 @@
-package tairov.baxti.shop.firms
+package tairov.baxti.shop.firms.firmDetail
 
 import android.graphics.Bitmap
 import androidx.appcompat.app.AppCompatActivity
@@ -16,7 +16,7 @@ class InvoiceImage : AppCompatActivity() {
         binding = ActivityInvoiceImageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val imageUri = intent.getStringExtra("imageUri")
+        val imageUri = intent.getStringExtra(InvoicesConsts.IMAGE_URI)
         Picasso.get().load(imageUri).into(binding.imageView)
 
 

@@ -1,34 +1,31 @@
-package tairov.baxti.shop.firms
+package tairov.baxti.shop.firms.firmDetail
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.DialogInterface
-import android.graphics.drawable.BitmapDrawable
-import android.util.Log
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.net.toUri
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import tairov.baxti.shop.R
-import tairov.baxti.shop.databinding.FirmDetailItemBinding
 import tairov.baxti.shop.databinding.FirmDetailItemWithImageBinding
-import kotlin.coroutines.coroutineContext
+import tairov.baxti.shop.firms.FirmsConsts
 
 class FirmDetailAdapter(val context: Context, private val onClickListener: ClickFirmDetail): RecyclerView.Adapter<FirmDetailAdapter.FirmDetailHolder>() {
     private val invoices = ArrayList<Invoice>()
-//    val products = arrayListOf(1,2,3,4,5,6,7)
+
     class FirmDetailHolder(item: View): RecyclerView.ViewHolder(item) {
         val binding = FirmDetailItemWithImageBinding.bind(item)
+        @RequiresApi(Build.VERSION_CODES.O)
         fun bind(invoice: Invoice){
             Picasso.get().load(invoice.imageUri).into(binding.invoiceImage)
             binding.payment.text = invoice.payment.toString()
             binding.paidFor.text = invoice.paidFor.toString()
             binding.previousDebt.text = invoice.previousDebt.toString()
             binding.totalDebt.text = invoice.totalDebt.toString()
-            binding.date.text = invoice.date
+            binding.date.text = invoice.date?.format(FirmsConsts.FORMATTER)
         }
     }
 
@@ -37,6 +34,7 @@ class FirmDetailAdapter(val context: Context, private val onClickListener: Click
         return FirmDetailHolder(view)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: FirmDetailHolder, position: Int) {
         holder.bind(invoices[position])
         holder.binding.invoiceImage.setOnClickListener {

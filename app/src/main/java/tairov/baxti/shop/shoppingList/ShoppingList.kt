@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
+import tairov.baxti.shop.MainConsts
 import tairov.baxti.shop.R
 import tairov.baxti.shop.databinding.ActivityShoppingListBinding
 import tairov.baxti.shop.debetors.ClickDebtorItem
@@ -27,22 +28,12 @@ class ShoppingList : AppCompatActivity(),
     private val products = ArrayList<ShoppingListItem>()
     private val doneProducts = ArrayList<ShoppingListItem>()
 
-
-    private  var list = arrayListOf<ShoppingListItem>(
-        ShoppingListItem("1234", "dfsdsfsd", false),
-        ShoppingListItem("1234", "dfsdsfsd", false),
-        ShoppingListItem("1234", "dfsdsfsd", true),
-        ShoppingListItem("1234", "dfsdsfsd", true),
-        ShoppingListItem("1234", "dfsdsfsd", true)
-    )
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityShoppingListBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        db = FirebaseDatabase.getInstance("https://shop-15b50-default-rtdb.europe-west1.firebasedatabase.app")
-        productsRef = db.getReference("ShoppingList")
+        db = FirebaseDatabase.getInstance()
+        productsRef = db.getReference(ShoppingListConsts.SHOPPING_LIST)
         initAdapter()
         binding.addProduct.setOnClickListener {
             val fm = supportFragmentManager
@@ -84,11 +75,14 @@ class ShoppingList : AppCompatActivity(),
     private fun initClickListeners(): ClickShoppingListItem {
         return object : ClickShoppingListItem {
             override fun done(productId: String) {
-               val product = productsRef.child(productId).child("done")
+               val product = productsRef.child(productId)
+                   .child(ShoppingListConsts.DONE)
                 product.addListenerForSingleValueEvent(object : ValueEventListener{
                     override fun onDataChange(snapshot: DataSnapshot) {
                         val done = snapshot.value.toString().toBoolean()
-                        productsRef.child(productId).child("done").setValue(!done)
+                        productsRef.child(productId)
+                            .child(ShoppingListConsts.DONE)
+                            .setValue(!done)
                     }
                     override fun onCancelled(error: DatabaseError) {
                         TODO("Not yet implemented")
@@ -107,7 +101,7 @@ class ShoppingList : AppCompatActivity(),
         }
     }
 
-    override fun addNewProduct(dialog: AddItemToShoppingList) {
+    override fun add(dialog: AddItemToShoppingList) {
         val productName = dialog.binding.newProductName.text.toString()
         productsRef.push().setValue(ShoppingListItem(productName = productName))
         dialog.dismiss()
@@ -115,7 +109,9 @@ class ShoppingList : AppCompatActivity(),
 
     override fun edit(dialog: EditItemToShoppingList) {
         val productName = dialog.binding.newProductName.text.toString()
-        productsRef.child(dialog.productId).child("productName").setValue(productName)
+        productsRef.child(dialog.productId)
+            .child(ShoppingListConsts.PRODUCT_NAME)
+            .setValue(productName)
         dialog.dismiss()
     }
 }

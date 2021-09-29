@@ -28,7 +28,7 @@ class EditFirmDetailDialog: DialogFragment() {
             resetSettings()
         }
         binding.done.setOnClickListener {
-            if(isFieldEmpty()){
+            if(!isFieldEmpty()){
                 listener.done(this)
                 resetSettings()
             }
@@ -52,9 +52,9 @@ class EditFirmDetailDialog: DialogFragment() {
             if(edPaidFor.text.isNullOrEmpty()) edPaidFor.error = "Поле должно быть заполнено"
             if(edPreviousDebt.text.isNullOrEmpty()) edPreviousDebt.error = "Поле должно быть заполнено"
 //            if(edTotalDebt.text.isNullOrEmpty()) edTotalDebt.error = "Поле должно быть заполнено"
-            return  (   !edPayment.text.isNullOrEmpty() ||
-                        !edPaidFor.text.isNullOrEmpty() ||
-                        !edPreviousDebt.text.isNullOrEmpty()
+            return  (   edPayment.text.isNullOrEmpty() ||
+                        edPaidFor.text.isNullOrEmpty() ||
+                        edPreviousDebt.text.isNullOrEmpty()
 //                        !edTotalDebt.text.isNullOrEmpty()
                     )
         }

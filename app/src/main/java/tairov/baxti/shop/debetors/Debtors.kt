@@ -35,8 +35,8 @@ class Debtors : AppCompatActivity(),
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        db = FirebaseDatabase.getInstance("https://shop-15b50-default-rtdb.europe-west1.firebasedatabase.app")
-        debtorsRef = db.getReference("DebtorsTest")
+        db = FirebaseDatabase.getInstance()
+        debtorsRef = db.getReference(DebtorsConsts.DEBTORS_TEST)
 
         binding.debtorsList.layoutManager = LinearLayoutManager(this)
         binding.debtorsList.adapter = adapter
@@ -95,12 +95,12 @@ class Debtors : AppCompatActivity(),
         val paid = dialog.binding.edPaid.text.toString()
         val debt = dialog.binding.edDebt.text.toString()
         if(paid.isNotEmpty()){
-            debtorsRef.child(debtorId).child("pay").setValue(paid.toDouble())
-            val dbDebt = debtorsRef.child(debtorId).child("debt")
+            debtorsRef.child(debtorId).child(DebtorsConsts.PAY).setValue(paid.toDouble())
+            val dbDebt = debtorsRef.child(debtorId).child(DebtorsConsts.DEBT)
             dbDebt.addListenerForSingleValueEvent(object: ValueEventListener{
                 override fun onDataChange(snapshot: DataSnapshot) {
                    val totalDebt = snapshot.value.toString().toInt() - paid.toInt()
-                   debtorsRef.child(debtorId).child("debt").setValue(totalDebt)
+                   debtorsRef.child(debtorId).child(DebtorsConsts.DEBT).setValue(totalDebt)
                 }
                 override fun onCancelled(error: DatabaseError) {
                     TODO("Not yet implemented")
@@ -109,7 +109,7 @@ class Debtors : AppCompatActivity(),
             Toast.makeText(baseContext, "Данные обновлены", Toast.LENGTH_SHORT).show()
         }
         if(debt.isNotEmpty()){
-            debtorsRef.child(debtorId).child("debt").setValue(debt.toDouble())
+            debtorsRef.child(debtorId).child(DebtorsConsts.DEBT).setValue(debt.toDouble())
             Toast.makeText(baseContext, "Задолженность обновлена", Toast.LENGTH_SHORT).show()
         }
         editDebtorDialog.dismiss()
@@ -118,7 +118,7 @@ class Debtors : AppCompatActivity(),
     override fun addNewDebtor(dialog: AddDebtorDialog) {
         val debtorName = dialog.binding.edDebtorName.text.toString()
         val debtorDebt = dialog.binding.edNewDebt.text.toString().toInt()
-        debtorsRef.push().setValue(Debtor("", debtorName, 0, debtorDebt))
+        debtorsRef.push().setValue(Debtor(name = debtorName, debt = debtorDebt))
         addNewDebtorDialog.dismiss()
     }
 }

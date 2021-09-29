@@ -1,4 +1,4 @@
-package tairov.baxti.shop.firms
+package tairov.baxti.shop.firms.firmDetail
 
 import java.io.Serializable
 import java.time.LocalDate
@@ -13,6 +13,6 @@ data class Invoice(
     var payment: Double = 0.0,
     var previousDebt: Double = 0.0,
     var totalDebt: Double = 0.0,
-    var date: String = ""
-//    var date: LocalDate? = null
+//    var date: String = ""
+    var date: LocalDate? = null
 ): Serializable {}

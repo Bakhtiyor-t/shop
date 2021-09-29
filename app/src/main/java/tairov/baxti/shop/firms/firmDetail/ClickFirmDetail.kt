@@ -1,4 +1,4 @@
-package tairov.baxti.shop.firms
+package tairov.baxti.shop.firms.firmDetail
 
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable

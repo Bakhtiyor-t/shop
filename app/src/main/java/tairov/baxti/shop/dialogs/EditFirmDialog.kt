@@ -23,7 +23,7 @@ class EditFirmDialog: DialogFragment() {
     ): View {
         binding = EditFirmDialogBinding.inflate(inflater)
         binding.done.setOnClickListener {
-            if(isFieldEmpty()){
+            if(!isFieldEmpty()){
                 listener.done(this, firmId)
                 resetSettings()
             }
@@ -49,9 +49,11 @@ class EditFirmDialog: DialogFragment() {
     private fun isFieldEmpty(): Boolean{
         binding.apply {
             if(firmName.text.isNullOrEmpty()) firmName.error = "Поле должно быть заполнено"
-            if(paid.text.isNullOrEmpty()) paid.error = "Поле должно быть заполнено"
-            if(debt.text.isNullOrEmpty()) debt.error = "Поле должно быть заполнено"
-            return  !paid.text.isNullOrEmpty() || !debt.text.isNullOrEmpty() || !firmName.text.isNullOrEmpty()
+//            if(paid.text.isNullOrEmpty()) paid.error = "Поле должно быть заполнено"
+//            if(debt.text.isNullOrEmpty()) debt.error = "Поле должно быть заполнено"
+            return firmName.text.isNullOrEmpty()
+//                    !paid.text.isNullOrEmpty() ||
+//                    !debt.text.isNullOrEmpty()
         }
     }
 
