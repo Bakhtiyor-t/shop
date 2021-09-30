@@ -15,6 +15,7 @@ import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
@@ -24,7 +25,9 @@ import java.io.ByteArrayOutputStream
 import java.util.*
 import tairov.baxti.shop.firms.Firm
 import tairov.baxti.shop.firms.FirmsConsts
+import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 
 class AddInvoice : AppCompatActivity() {
@@ -36,7 +39,7 @@ class AddInvoice : AppCompatActivity() {
     private var firmDetail = Firm()
 
     private var imageUri: Uri? = null
-    private lateinit var date: LocalDate
+    private lateinit var finalDate: Timestamp
     private val PERMISSION_CODE = 1000
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -130,8 +133,10 @@ class AddInvoice : AppCompatActivity() {
         val day = calendar.get(Calendar.DAY_OF_MONTH)
 
         val dpd = DatePickerDialog(this, { _, year, monthOfYear, dayOfMonth ->
-            date = LocalDate.of(year, monthOfYear, dayOfMonth)
-            binding.edDate.setText(date.format(FirmsConsts.FORMATTER))
+            val date = LocalDate.of(year, monthOfYear+1, dayOfMonth)
+            binding.edDate.setText(date.format(FirmsConsts.DATE_TIME_FORMATTER))
+            finalDate = Timestamp(java.sql.Date.valueOf(date.toString()))
+            Log.d(MainConsts.LOG_TAG, "$finalDate")
         }, year1, month, day)
         dpd.show()
     }
@@ -148,7 +153,7 @@ class AddInvoice : AppCompatActivity() {
                 previousDebt = previousDebt,
                 totalDebt = if(binding.edTotalDebt.text.isNullOrEmpty()) totalDebt
                             else binding.edTotalDebt.text.toString().toDouble(),
-                date = date
+                date = finalDate
             )
             uploadInvoiceImage(invoice)
             finish()

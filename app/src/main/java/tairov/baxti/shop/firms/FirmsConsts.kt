@@ -2,6 +2,7 @@ package tairov.baxti.shop.firms
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import tairov.baxti.shop.MainConsts
 import java.time.format.DateTimeFormatter
 
 object FirmsConsts {
@@ -11,5 +12,7 @@ object FirmsConsts {
     const val FIRM_DEBT: String = "debt"
     const val FIRM_DETAIL: String = "firmDetail"
     @RequiresApi(Build.VERSION_CODES.O)
-    val FORMATTER: DateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
+    val DATE_TIME_FORMATTER: DateTimeFormatter = DateTimeFormatter.ofPattern(
+        MainConsts.FORMAT_PATTERN
+    )
 }

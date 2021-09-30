@@ -3,21 +3,28 @@ package tairov.baxti.shop.firms.firmDetail
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
+import tairov.baxti.shop.MainConsts
 import tairov.baxti.shop.R
 import tairov.baxti.shop.databinding.FirmDetailItemWithImageBinding
 import tairov.baxti.shop.firms.FirmsConsts
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.util.*
+import kotlin.collections.ArrayList
 
 class FirmDetailAdapter(val context: Context, private val onClickListener: ClickFirmDetail): RecyclerView.Adapter<FirmDetailAdapter.FirmDetailHolder>() {
     private val invoices = ArrayList<Invoice>()
 
     class FirmDetailHolder(item: View): RecyclerView.ViewHolder(item) {
         val binding = FirmDetailItemWithImageBinding.bind(item)
+        @SuppressLint("SimpleDateFormat")
         @RequiresApi(Build.VERSION_CODES.O)
         fun bind(invoice: Invoice){
             Picasso.get().load(invoice.imageUri).into(binding.invoiceImage)
@@ -25,7 +32,7 @@ class FirmDetailAdapter(val context: Context, private val onClickListener: Click
             binding.paidFor.text = invoice.paidFor.toString()
             binding.previousDebt.text = invoice.previousDebt.toString()
             binding.totalDebt.text = invoice.totalDebt.toString()
-            binding.date.text = invoice.date?.format(FirmsConsts.FORMATTER)
+            binding.date.text = InvoicesConsts.SIMPLE_DATE_FORMAT.format(invoice.date!!.toDate())
         }
     }
 
@@ -38,7 +45,6 @@ class FirmDetailAdapter(val context: Context, private val onClickListener: Click
     override fun onBindViewHolder(holder: FirmDetailHolder, position: Int) {
         holder.bind(invoices[position])
         holder.binding.invoiceImage.setOnClickListener {
-//            val bitmap = (holder.binding.invoiceImage.drawable as BitmapDrawable).bitmap
             onClickListener.imageClick(invoices[position].imageUri,)
         }
         holder.binding.delete.setOnClickListener {

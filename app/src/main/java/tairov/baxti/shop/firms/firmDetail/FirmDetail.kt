@@ -20,8 +20,7 @@ import tairov.baxti.shop.firms.Firm
 import tairov.baxti.shop.firms.FirmsConsts
 
 class FirmDetail : AppCompatActivity(),
-    EditFirmDetailDialog.EditFirmDetailDialogListener
-{
+    EditFirmDetailDialog.EditFirmDetailDialogListener {
     private lateinit var binding: ActivityFirmDetailBinding
     private var adapter = FirmDetailAdapter(this, initListeners())
     private lateinit var storageRef: StorageReference
@@ -32,7 +31,7 @@ class FirmDetail : AppCompatActivity(),
     private var invoicesList = ArrayList<Invoice>()
 
     private lateinit var db: FirebaseFirestore
-//    private var downloadUri: Uri? = null
+
     private var totalPaid = 0.0
     private var totalDebt = 0.0
     private val updateFirmData = mutableMapOf<String, Any>()
@@ -60,44 +59,40 @@ class FirmDetail : AppCompatActivity(),
         getFromDatabase()
     }
 
-    private fun getFromDatabase(){
-        db.collection(InvoicesConsts.INVOICES).whereEqualTo(InvoicesConsts.FIRM_ID, firmDetail.id)
-            .orderBy(InvoicesConsts.DATE)
+    private fun getFromDatabase() {
+        db.collection(InvoicesConsts.INVOICES)
+            .whereEqualTo(InvoicesConsts.FIRM_ID, firmDetail.id)
             .addSnapshotListener { invoices, error ->
-            totalPaid = 0.0
-            totalDebt = 0.0
-            if(error != null){
-                Log.d(MainConsts.LOG_TAG, "$error")
-                return@addSnapshotListener
+                totalPaid = 0.0
+                totalDebt = 0.0
+                if (error != null) {
+                    Log.d(MainConsts.LOG_TAG, "$error")
+                    return@addSnapshotListener
+                }
+                for (invoice in invoices!!) {
+                    val inv = invoice.toObject<Invoice>()
+                    totalPaid += inv.paidFor
+                    totalDebt += inv.totalDebt
+                    invoicesList.add(inv)
+                }
+                invoicesList.sortByDescending { item -> item.date }
+                adapter.addAll(invoicesList)
+                invoicesList.clear()
+                updateFirmData[FirmsConsts.FIRM_PAY] = totalPaid
+                updateFirmData[FirmsConsts.FIRM_DEBT] = totalDebt
+                updateFirm(updateFirmData)
             }
-            for (invoice in invoices!!){
-                val inv = invoice.toObject<Invoice>()
-                totalPaid += inv.paidFor
-                totalDebt += inv.totalDebt
-                invoicesList.add(0, inv)
-            }
-            adapter.addAll(invoicesList)
-            invoicesList.clear()
-            updateFirmData[FirmsConsts.FIRM_PAY] = totalPaid
-            updateFirmData[FirmsConsts.FIRM_DEBT] = totalDebt
-            updateFirm(updateFirmData)
-        }
     }
 
-    private fun updateFirm(data: MutableMap<String, Any>){
+    private fun updateFirm(data: MutableMap<String, Any>) {
         db.collection(FirmsConsts.FIRMS).document(firmDetail.id)
             .update(data)
     }
 
     private fun initListeners(): ClickFirmDetail {
-        return object: ClickFirmDetail {
+        return object : ClickFirmDetail {
             override fun imageClick(imageUri: String) {
                 val intent = Intent(this@FirmDetail, InvoiceImage::class.java)
-//                val bitmap = (imageBitmap as BitmapDrawable).bitmap
-//                val baos = ByteArrayOutputStream()
-//                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-//                val data = baos.toByteArray()
-//                intent.putExtra("imageBitmap", data)
                 intent.putExtra(InvoicesConsts.IMAGE_URI, imageUri)
                 startActivity(intent)
                 Toast.makeText(this@FirmDetail, "Image URL: $imageUri", Toast.LENGTH_SHORT).show()
@@ -136,8 +131,8 @@ class FirmDetail : AppCompatActivity(),
         updatedData[InvoicesConsts.PAID_FOR] = paidFor.toDouble()
         updatedData[InvoicesConsts.PREVIOUS_DEBT] = previousDebt.toDouble()
         updatedData[InvoicesConsts.TOTAL_DEBT] = payment.toDouble() +
-                                   previousDebt.toDouble() -
-                                   paidFor.toDouble()
+                previousDebt.toDouble() -
+                paidFor.toDouble()
 
         db.collection(InvoicesConsts.INVOICES)
             .document(dialog.invoiceId)
