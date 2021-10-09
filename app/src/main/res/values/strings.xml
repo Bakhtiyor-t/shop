@@ -59,4 +59,12 @@
     <string name="productName">Название товара</string>
     <string name="editProductName">Изменение имени товара</string>
 
+<!--    Expenses-->
+    <string name="totalExpenses">Всего расходов:&#160;</string>
+    <string name="addExpense">Добавить расход</string>
+    <string name="question">Это фирма?</string>
+    <string name="expenseName">Названия расхода</string>
+    <string name="sort">Сортировать</string>
+    <string name="origin">От</string>
+    <string name="destination">До</string>
 </resources>

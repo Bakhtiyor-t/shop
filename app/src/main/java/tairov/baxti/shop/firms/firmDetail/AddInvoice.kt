@@ -136,7 +136,6 @@ class AddInvoice : AppCompatActivity() {
             val date = LocalDate.of(year, monthOfYear+1, dayOfMonth)
             binding.edDate.setText(date.format(FirmsConsts.DATE_TIME_FORMATTER))
             finalDate = Timestamp(java.sql.Date.valueOf(date.toString()))
-            Log.d(MainConsts.LOG_TAG, "$finalDate")
         }, year1, month, day)
         dpd.show()
     }

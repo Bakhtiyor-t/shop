@@ -48,7 +48,7 @@ class EditDebtorDialog: DialogFragment() {
             listener = context as EditDebtorDialogListener
         } catch (e: ClassCastException) {
             throw ClassCastException((context.toString() +
-                    " must implement NoticeDialogListener"))
+                    " must implement EditDebtorDialogListener"))
         }
     }
 
@@ -67,28 +67,3 @@ class EditDebtorDialog: DialogFragment() {
         binding.edDebt.error = null
     }
 }
-
-
-//override fun onCreateView(
-//    inflater: LayoutInflater,
-//    container: ViewGroup?,
-//    savedInstanceState: Bundle?
-//): View {
-//    binding = EditDebtorDialogBinding.inflate(inflater)
-//    binding.debtorName.text = debtorName
-//    binding.cancel.setOnClickListener {
-//        listener.cancel(this)
-//        resetSettings()
-//    }
-//    binding.done.setOnClickListener {
-//        if(isFieldEmpty()){
-//            val paid = binding.edPaid.text.toString()
-//            val debt = binding.edDebt.text.toString()
-//            listener.done(this, debtorId=debtorId, paid=paid, debt=debt)
-//            resetSettings()
-//        }else{
-//            Toast.makeText(context, "Заполните хотябы одно поле", Toast.LENGTH_SHORT).show()
-//        }
-//    }
-//    return binding.root
-//}

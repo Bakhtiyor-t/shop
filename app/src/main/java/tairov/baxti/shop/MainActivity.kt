@@ -9,10 +9,13 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import tairov.baxti.shop.cashBox.CashBox
 import tairov.baxti.shop.shoppingList.ShoppingList
 import tairov.baxti.shop.firms.Firms
 import tairov.baxti.shop.databinding.ActivityMainBinding
 import tairov.baxti.shop.debetors.Debtors
+import tairov.baxti.shop.expenses.Expenses
+import tairov.baxti.shop.firms.firmDetail.InvoicesConsts
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -44,22 +47,29 @@ class MainActivity : AppCompatActivity() {
 
     private fun initClickListeners(){
         binding.firms.setOnClickListener{
-            val firms = Intent(this, Firms::class.java)
-            startActivity(firms)
+            startActivity(
+                Intent(this, Firms::class.java)
+            )
         }
         binding.debtors.setOnClickListener{
-            val debtors = Intent(this, Debtors::class.java)
-            startActivity(debtors)
+            startActivity(
+                Intent(this, Debtors::class.java)
+            )
         }
         binding.shoppingList.setOnClickListener{
-            val shoppingList = Intent(this, ShoppingList::class.java)
-            startActivity(shoppingList)
+            startActivity(
+                Intent(this, ShoppingList::class.java)
+            )
         }
         binding.expensesBtn.setOnClickListener {
-
+            startActivity(
+                Intent(this, Expenses::class.java)
+            )
         }
         binding.cashBox.setOnClickListener {
-
+            startActivity(
+                Intent(this, CashBox::class.java)
+            )
         }
         binding.logOut.setOnClickListener {
             logOut()
@@ -73,7 +83,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getFromDatabase(){
-        db.collection("invoices")
+        db.collection(InvoicesConsts.INVOICES)
             .addSnapshotListener { snapshots, _ ->
                 if (snapshots != null) {
                     totalPayment = 0.0
@@ -82,9 +92,9 @@ class MainActivity : AppCompatActivity() {
                     totalDebt = 0.0
                     for (snapshot in snapshots){
 //                        totalPayment += snapshot["payment"].toString().toDouble()
-                        totalPaid += snapshot["paidFor"].toString().toDouble()
+                        totalPaid += snapshot[InvoicesConsts.PAID_FOR].toString().toDouble()
 //                        totalPreviousDebt += snapshot["previousDebt"].toString().toDouble()
-                        totalDebt += snapshot["totalDebt"].toString().toDouble()
+                        totalDebt += snapshot[InvoicesConsts.TOTAL_DEBT].toString().toDouble()
                     }
                     setValues()
                 }
