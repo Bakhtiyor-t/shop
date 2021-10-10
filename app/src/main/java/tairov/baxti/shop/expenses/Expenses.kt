@@ -123,9 +123,9 @@ class Expenses : AppCompatActivity(),
             .await()
             .documents
 
-    private fun setFromDatabase(expenseId: String, expense: Expense){
+    private fun setFromDatabase(expense: Expense){
         db.collection(ExpensesConsts.EXPENSES)
-            .document(expenseId)
+            .document(expense.id)
             .set(expense)
     }
 
@@ -136,7 +136,11 @@ class Expenses : AppCompatActivity(),
 
         if(dialog.binding.firmCheckBox.isChecked)
         {
-            val expense = Expense(id=expenseId, name=firmName, price=amountExpense, date=finalDate)
+            val expense = Expense(
+                id=expenseId, name=firmName,
+                price=amountExpense, date=finalDate,
+                firms=true
+            )
             CoroutineScope(Dispatchers.IO).launch(Dispatchers.IO) {
                 val result = getFirmId(firmName)
                 if(result.size > 0){
@@ -144,7 +148,7 @@ class Expenses : AppCompatActivity(),
                     Log.d(MainConsts.LOG_TAG, expense.firmId)
                 }
                 if(expense.firmId.isNotEmpty()){
-                    setFromDatabase(expenseId, expense)
+                    setFromDatabase(expense)
                     dialog.dismiss()
                 }else{
                     runOnUiThread {
@@ -164,7 +168,7 @@ class Expenses : AppCompatActivity(),
         }
         else{
             val expense = Expense(id=expenseId, name=firmName, price=amountExpense, date=finalDate)
-            setFromDatabase(expenseId, expense)
+            setFromDatabase(expense)
             dialog.dismiss()
         }
     }

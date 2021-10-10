@@ -10,13 +10,15 @@ import androidx.fragment.app.DialogFragment
 import tairov.baxti.shop.databinding.SortDialogBinding
 import tairov.baxti.shop.utils.Validator
 
-class SortDialog: DialogFragment() {
+class SortDialog : DialogFragment() {
     lateinit var binding: SortDialogBinding
-    interface SortDialogListener{
+
+    interface SortDialogListener {
         fun dateDone(dialog: SortDialog)
         fun changeDate(editText: EditText)
         fun changeDate2(editText: EditText)
     }
+
     private lateinit var listener: SortDialogListener
 
     override fun onCreateView(
@@ -25,7 +27,7 @@ class SortDialog: DialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = SortDialogBinding.inflate(inflater)
-        val fields = arrayListOf<EditText>(binding.date, binding.date2)
+        val fields = arrayListOf(binding.date, binding.date2)
         binding.cancel.setOnClickListener {
             dismiss()
         }
@@ -36,7 +38,7 @@ class SortDialog: DialogFragment() {
             listener.changeDate2(binding.date2)
         }
         binding.done.setOnClickListener {
-            if(Validator.checkAllFieldIsFull(fields)){
+            if (Validator.checkAllFieldIsFull(fields)) {
                 listener.dateDone(this)
                 Validator.resetSettings(fields)
             }
@@ -49,8 +51,10 @@ class SortDialog: DialogFragment() {
         try {
             listener = context as SortDialogListener
         } catch (e: ClassCastException) {
-            throw ClassCastException((context.toString() +
-                    " must implement SortDialogListener"))
+            throw ClassCastException(
+                (context.toString() +
+                " must implement SortDialogListener")
+            )
         }
     }
 }

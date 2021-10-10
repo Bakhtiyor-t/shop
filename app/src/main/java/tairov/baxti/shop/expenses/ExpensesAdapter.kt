@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import tairov.baxti.shop.MainConsts
 import tairov.baxti.shop.R
 import tairov.baxti.shop.databinding.ExpensesListItemBinding
 import tairov.baxti.shop.firms.firmDetail.InvoicesConsts
@@ -18,7 +19,7 @@ class ExpensesAdapter(private val onClickListener: ClickExpense): RecyclerView.A
         fun bind(expense: Expense){
             binding.title.text = expense.name
             binding.expense.text = expense.price.toString()
-            binding.date.text = InvoicesConsts.SIMPLE_DATE_FORMAT.format(expense.date!!.toDate())
+            binding.date.text = MainConsts.SIMPLE_DATE_FORMAT.format(expense.date.toDate())
         }
     }
 

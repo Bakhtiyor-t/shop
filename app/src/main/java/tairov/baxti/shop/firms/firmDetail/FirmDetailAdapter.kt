@@ -32,7 +32,7 @@ class FirmDetailAdapter(val context: Context, private val onClickListener: Click
             binding.paidFor.text = invoice.paidFor.toString()
             binding.previousDebt.text = invoice.previousDebt.toString()
             binding.totalDebt.text = invoice.totalDebt.toString()
-            binding.date.text = InvoicesConsts.SIMPLE_DATE_FORMAT.format(invoice.date!!.toDate())
+            binding.date.text = MainConsts.SIMPLE_DATE_FORMAT.format(invoice.date!!.toDate())
         }
     }
 
